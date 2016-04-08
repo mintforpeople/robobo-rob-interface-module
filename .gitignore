@@ -1,0 +1,61 @@
+#backup doesn't included
+*.asta.bak
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+
+#IntellJ
+.idea/compiler.xml
+/**/.gradle
+/**/local.properties
+/**/.idea/workspace.xml
+/**/.idea/
+/**/.idea/copyright/profiles_settings.xml
+/**/.signing/
+/**/build/
+/**/bin/
+/**/gen/
+/**/*.iml
+/**/*.ipr
+/**/*.iws
+
+
+#Eclipse's folders and files
+/**/.directory/
+/**/.project
+/**/.classpath
+/**/.settings/
+/**/.metadata/
+/**/.recommenders/
+
+
+#temporary release folders shound't be included
+/**/release
+
+#Target folders aren't included
+/**/target
+
+# Netbeans files and folders aren't included
+/**/nbactions.xml
+/**/nbproject/private/
+/**/build/
+/**/nbbuild/
+/**/dist/
+/**/nbdist/
+/**/nbactions.xml
+/**/.nb-gradle/
+
+
+
+/**/local.properties
+/**/*.log
+
+
+/target
