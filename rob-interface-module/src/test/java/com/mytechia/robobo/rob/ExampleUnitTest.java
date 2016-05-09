@@ -1,4 +1,4 @@
-package com.mytechia.commons.framework.simplemessageprotocol.android.test;
+package com.mytechia.robobo.rob;
 
 import org.junit.Test;
 

@@ -1,1 +1,1 @@
-include ':app', ':simplemessageprotocol'
+include ':app', ':simplemessageprotocol', ':rob-interface-module'
