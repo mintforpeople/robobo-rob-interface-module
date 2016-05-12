@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Robobo-ROB</string>
+    <string name="btnForward">Forwards</string>
+    <string name="btnBackward">Backwards</string>
+    <string name="btnTurnLeft">Turn Left</string>
+    <string name="btnTurnRight">Turn Right</string>
+    <string name="btnStop">Stop</string>
+    <string name="sBtnAngVel">Vel.</string>
+    <string name="sBtnAng">Ang.</string>
+    <string name="lblTime">Time</string>
+    <string name="lblAngVel">Ang. Vel.</string>
+    <string name="lblAngle">Angle</string>
+    <string name="swVelocity">Use Angle</string>
+    <string name="lblGaps">Gaps</string>
+    <string name="lblFalls">Falls</string>
+    <string name="lblIRs">IRs</string>
+    <string name="lblPanMotor">Pan</string>
+    <string name="lblTiltMotor">Tilt</string>
+    <string name="lblLeftMotor">Left</string>
+    <string name="lblRightMotor">Right</string>
+    <string name="lblPanBar">Pan</string>
+    <string name="lblTiltBar">Tilt</string>
+    <string name="lblStatusPeriod">Period</string>
+    <string name="lblLastStatus">Last Status</string>
+</resources>

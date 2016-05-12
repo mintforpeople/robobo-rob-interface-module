@@ -160,7 +160,7 @@ public class ButtonAdapter extends BaseAdapter {
                 short angVel2 = 100;
                 short angle2 = 30000;
 
-                defaultRob.moveMT(angVel1, angle1, angVel2, angle2);
+                //defaultRob.moveMT(angVel1, angle1, angVel2, angle2);
 
             }
         });
@@ -170,11 +170,11 @@ public class ButtonAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                short angVel1 = 101;
-                short angVel2 = 671;
+                int angVel1 = 101;
+                int angVel2 = 671;
                 long time = 60;
 
-                defaultRob.moveMT(angVel1, angVel2, time);
+                //defaultRob.moveMT(angVel1, angVel2, time);
 
             }
         });

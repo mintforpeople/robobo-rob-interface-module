@@ -33,9 +33,17 @@ import com.mytechia.robobo.framework.FrameworkManager;
 import com.mytechia.robobo.rob.comm.RoboCommandFactory;
 import com.mytechia.robobo.rob.comm.SmpRobComm;
 
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.core.ConsoleAppender;
 
 /** Default implementation of the IRobInterfaceModule interface using bluetooth for communication
  * with a Robobo-ROB.
@@ -121,6 +129,10 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
             this.smpRoboCom.start();
 
+            this.smpRoboCom.setRobStatusPeriod(1000);
+
+            this.smpRoboCom.setLEDsMode((byte)8);
+
         }
         catch(IOException e) {
             throw new InternalErrorException(e);
@@ -128,6 +140,8 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
 
     }
+
+
 
     @Override
     public void shutdown() throws InternalErrorException {
