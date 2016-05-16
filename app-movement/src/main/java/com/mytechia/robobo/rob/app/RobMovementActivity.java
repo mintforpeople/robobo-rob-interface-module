@@ -48,7 +48,7 @@ import com.mytechia.robobo.rob.movement.IRobMovementModule;
 import java.util.Collection;
 import java.util.Date;
 
-/** Custom Robobo display activty that provide control to move the ROB
+/** Custom Robobo display activity that provide control to move the ROB
  *
  * @author Gervasio Varela
  */
@@ -157,7 +157,7 @@ public class RobMovementActivity extends Activity {
                     robMovement.moveForwards(getAngVel(), getTime());
                 }
                 else {
-                    robMovement.moveBackwards(getAngVel(), getAngle());
+                    robMovement.moveForwards(getAngVel(), getAngle());
                 }
             }
         });
@@ -445,7 +445,7 @@ public class RobMovementActivity extends Activity {
             sb.append(" ");
         }
 
-        this.txtGaps.setText(sb.toString());
+        this.txtFalls.setText(sb.toString());
 
     }
 
