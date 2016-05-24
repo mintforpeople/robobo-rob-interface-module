@@ -27,10 +27,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.mytechia.robobo.framework.RoboboManager;
@@ -43,7 +41,6 @@ import com.mytechia.robobo.rob.IRob;
 import com.mytechia.robobo.rob.IRobInterfaceModule;
 import com.mytechia.robobo.rob.IRobStatusListener;
 import com.mytechia.robobo.rob.MotorStatus;
-import com.mytechia.robobo.rob.MoveMTMode;
 import com.mytechia.robobo.rob.movement.IRobMovementModule;
 
 import java.util.Collection;
@@ -155,10 +152,10 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (useTime()) {
-                    robMovement.moveForwards(getAngVel(), getTime());
+                    robMovement.moveForwardsTime(getAngVel(), (long)getTime());
                 }
                 else {
-                    robMovement.moveForwards(getAngVel(), getAngle());
+                    robMovement.moveForwardsAngle(getAngVel(), getAngle());
                 }
             }
         });
@@ -167,10 +164,10 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (useTime()) {
-                    robMovement.moveBackwards(getAngVel(), getTime());
+                    robMovement.moveBackwardsTime(getAngVel(), getTime());
                 }
                 else {
-                    robMovement.moveBackwards(getAngVel(), getAngle());
+                    robMovement.moveBackwardsAngle(getAngVel(), getAngle());
                 }
             }
         });
@@ -179,10 +176,10 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (useTime()) {
-                    robMovement.turnLeft(getAngVel(), getTime());
+                    robMovement.turnLeftTime(getAngVel(), getTime());
                 }
                 else {
-                    robMovement.turnLeft(getAngVel(), getAngle());
+                    robMovement.turnLeftAngle(getAngVel(), getAngle());
                 }
             }
         });
@@ -191,10 +188,10 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (useTime()) {
-                    robMovement.turnRight(getAngVel(), getTime());
+                    robMovement.turnRightTime(getAngVel(), getTime());
                 }
                 else {
-                    robMovement.turnRight(getAngVel(), getAngle());
+                    robMovement.turnRightAngle(getAngVel(), getAngle());
                 }
             }
         });

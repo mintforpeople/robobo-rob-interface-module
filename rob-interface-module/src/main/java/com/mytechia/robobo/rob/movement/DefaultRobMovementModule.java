@@ -33,25 +33,25 @@ public class DefaultRobMovementModule implements IRobMovementModule {
 
 
     @Override
-    public void moveForwards(short velocity, long time) {
+    public void moveForwardsTime(short velocity, long time) {
         Log.d("ROB-INTERFACE", String.format("Move forwards: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)velocity, (byte)velocity, time);
     }
 
     @Override
-    public void moveForwards(short velocity, int angle) {
+    public void moveForwardsAngle(short velocity, int angle) {
         Log.d("ROB-INTERFACE", String.format("Move forwards: %d - %d", velocity, angle));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)velocity, angle, (byte)velocity, angle);
     }
 
     @Override
-    public void moveBackwards(short velocity, long time) {
+    public void moveBackwardsTime(short velocity, long time) {
         Log.d("ROB-INTERFACE", String.format("Move backwards: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.REVERSE_REVERSE, (byte)velocity, (byte)velocity, time);
     }
 
     @Override
-    public void moveBackwards(short velocity, int angle) {
+    public void moveBackwardsAngle(short velocity, int angle) {
         Log.d("ROB-INTERFACE", String.format("Move backwards: %d - %d", velocity, angle));
         this.rob.moveMT(MoveMTMode.REVERSE_REVERSE, (byte)velocity, angle, (byte)velocity, angle);
     }
@@ -63,37 +63,37 @@ public class DefaultRobMovementModule implements IRobMovementModule {
     }
 
     @Override
-    public void turnLeft(short velocity, long time) {
+    public void turnLeftTime(short velocity, long time) {
         Log.d("ROB-INTERFACE", String.format("Turn left: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)velocity, (byte)0, time);
     }
 
     @Override
-    public void turnLeft(short velocity, int angle) {
+    public void turnLeftAngle(short velocity, int angle) {
         Log.d("ROB-INTERFACE", String.format("Turn left: %d - %d", velocity, angle));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, velocity, angle, (short) 0, 0);
     }
 
     @Override
-    public void turnLeftBackwards(short velocity, long time) {
+    public void turnLeftBackwardsTime(short velocity, long time) {
         Log.d("ROB-INTERFACE", String.format("Turn left backwards: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)0,(byte) velocity, time);
     }
 
     @Override
-    public void turnRight(short velocity, long time) {
+    public void turnRightTime(short velocity, long time) {
         Log.d("ROB-INTERFACE", String.format("Turn right: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)velocity, (byte)0, time);
     }
 
     @Override
-    public void turnRight(short velocity, int angle) {
+    public void turnRightAngle(short velocity, int angle) {
         Log.d("ROB-INTERFACE", String.format("Turn right: %d - %d", velocity, angle));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (short) 0, 0, velocity, angle);
     }
 
     @Override
-    public void turnRightBackwards(short velocity, long time) {
+    public void turnRightBackwardsTime(short velocity, long time) {
         Log.d("ROB-INTERFACE", String.format("Turn right backwards: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)0, (byte)velocity, time);
     }
