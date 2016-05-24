@@ -23,5 +23,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.mytechia:robobo-rob-interface:0.1.0-SNAPSHOT'
     compile project(':simplemessageprotocol')
-    compile 'com.mytechia:robobo-framework:0.1.4'
+    compile 'com.mytechia:robobo-framework:0.2.0'
 }

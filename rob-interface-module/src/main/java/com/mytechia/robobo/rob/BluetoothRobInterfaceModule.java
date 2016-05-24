@@ -29,10 +29,10 @@ import android.util.Log;
 
 import com.mytechia.commons.framework.exception.InternalErrorException;
 import com.mytechia.commons.framework.simplemessageprotocol.android.AndroidBluetoothSPPChannel;
-import com.mytechia.robobo.framework.FrameworkManager;
+
 import com.mytechia.robobo.rob.comm.RoboCommandFactory;
 import com.mytechia.robobo.rob.comm.SmpRobComm;
-
+import com.mytechia.robobo.framework.RoboboManager;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -81,7 +81,7 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
 
     @Override
-    public void startup(FrameworkManager manager) throws InternalErrorException {
+    public void startup(RoboboManager manager) throws InternalErrorException {
 
         if(this.actualBluetoothDevice!=null){
 

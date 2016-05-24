@@ -33,11 +33,12 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.mytechia.robobo.framework.FrameworkManager;
+import com.mytechia.robobo.framework.RoboboManager;
 import com.mytechia.robobo.framework.exception.ModuleNotFoundException;
 import com.mytechia.robobo.rob.BatteryStatus;
 import com.mytechia.robobo.rob.FallStatus;
 import com.mytechia.robobo.rob.GapStatus;
+import com.mytechia.robobo.rob.IRSensorStatus;
 import com.mytechia.robobo.rob.IRob;
 import com.mytechia.robobo.rob.IRobInterfaceModule;
 import com.mytechia.robobo.rob.IRobStatusListener;
@@ -54,7 +55,7 @@ import java.util.Date;
  */
 public class RobMovementActivity extends Activity {
 
-    private FrameworkManager roboboManager;
+    private RoboboManager roboboManager;
     private IRobMovementModule robMovement;
     private IRobInterfaceModule robModule;
     private IRob rob;
@@ -137,7 +138,7 @@ public class RobMovementActivity extends Activity {
 
 
 
-        this.roboboManager = FrameworkManager.getInstance();
+        this.roboboManager = RoboboManager.getInstance();
         try {
 
             this.robMovement = this.roboboManager.getModuleInstance(IRobMovementModule.class);
@@ -366,6 +367,11 @@ public class RobMovementActivity extends Activity {
                     }
                 });
                 updateLastStatus();
+            }
+
+            @Override
+            public void statusIRSensorStatus(Collection<IRSensorStatus> irSensorStatus) {
+
             }
 
             @Override

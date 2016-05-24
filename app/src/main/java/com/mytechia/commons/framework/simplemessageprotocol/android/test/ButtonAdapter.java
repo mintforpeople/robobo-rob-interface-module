@@ -143,7 +143,7 @@ public class ButtonAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                LEDsModeEnum mode = LEDsModeEnum.FALL;
+                LEDsModeEnum mode = LEDsModeEnum.INFRARED_AND_DETECT_FALL;
 
                 defaultRob.setLEDsMode(mode);
 
@@ -216,7 +216,7 @@ public class ButtonAdapter extends BaseAdapter {
                 short angVel = 10;
                 long time = 45;
 
-                defaultRob.movePan(angVel, time);
+                //defaultRob.movePan(angVel, time);
             }
         });
 
@@ -228,7 +228,7 @@ public class ButtonAdapter extends BaseAdapter {
                 short angVel = 16;
                 long time = 45;
 
-                defaultRob.moveTilt(angVel, time);
+                //defaultRob.moveTilt(angVel, time);
             }
         });
 
