@@ -46,6 +46,7 @@ import com.mytechia.robobo.rob.IRob;
 import com.mytechia.robobo.rob.IRobInterfaceModule;
 import com.mytechia.robobo.rob.IRobStatusListener;
 import com.mytechia.robobo.rob.MotorStatus;
+import com.mytechia.robobo.rob.WallConnectionStatus;
 import com.mytechia.robobo.rob.movement.IRobMovementModule;
 
 import org.slf4j.LoggerFactory;
@@ -101,8 +102,13 @@ public class RobMovementActivity extends Activity {
     private TextView lblPeriod;
     private SeekBar skBarPeriod;
 
+    private TextView txtBattery;
+
     private TextView txtLastStatus;
 
+
+    private BatteryStatus batteryStatus;
+    private WallConnectionStatus wallConnectionStatus;
 
     private ProgressDialog waitDialog;
 
@@ -149,6 +155,8 @@ public class RobMovementActivity extends Activity {
 
         this.lblPeriod = (TextView) findViewById(R.id.lblStatusPeriod);
         this.skBarPeriod = (SeekBar) findViewById(R.id.skBarStatusPeriod);
+
+        this.txtBattery = (TextView) findViewById(R.id.txtBattery);
 
         this.txtLastStatus = (TextView) findViewById(R.id.txtLastStatus);
 
@@ -214,6 +222,7 @@ public class RobMovementActivity extends Activity {
             public void statusMotorPan(MotorStatus motorStatus) {
                 Log.d("MOVEMENT", "Motor Pan");
                 setMotor(txtPan, motorStatus);
+                skBarPan.setProgress(motorStatus.getVariationAngle());
                 updateLastStatus();
             }
 
@@ -221,6 +230,7 @@ public class RobMovementActivity extends Activity {
             public void statusMotorTilt(MotorStatus motorStatus) {
                 Log.d("MOVEMENT", "Motor Tilt");
                 setMotor(txtTilt, motorStatus);
+                skBarTilt.setProgress(motorStatus.getVariationAngle());
                 updateLastStatus();
             }
 
@@ -253,6 +263,15 @@ public class RobMovementActivity extends Activity {
             @Override
             public void statusBattery(BatteryStatus batteryStatus) {
                 Log.d("MOVEMENT", "Battery");
+                RobMovementActivity.this.batteryStatus = batteryStatus;
+                updateBattery();
+                updateLastStatus();
+            }
+
+            @Override
+            public void statusWallConnectionStatus(WallConnectionStatus wallConnectionStatus) {
+                RobMovementActivity.this.wallConnectionStatus = wallConnectionStatus;
+                updateBattery();
                 updateLastStatus();
             }
 
@@ -279,10 +298,10 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (useTime()) {
-                    robMovement.moveForwards(getAngVel(), getTime());
+                    robMovement.moveForwardsTime(getAngVel(), getTime());
                 }
                 else {
-                    robMovement.moveForwards(getAngVel(), getAngle());
+                    robMovement.moveForwardsAngle(getAngVel(), getAngle());
                 }
             }
         });
@@ -291,10 +310,10 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (useTime()) {
-                    robMovement.moveBackwards(getAngVel(), getTime());
+                    robMovement.moveBackwardsTime(getAngVel(), getTime());
                 }
                 else {
-                    robMovement.moveBackwards(getAngVel(), getAngle());
+                    robMovement.moveBackwardsAngle(getAngVel(), getAngle());
                 }
             }
         });
@@ -303,10 +322,10 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (useTime()) {
-                    robMovement.turnLeft(getAngVel(), getTime());
+                    robMovement.turnLeftTime(getAngVel(), getTime());
                 }
                 else {
-                    robMovement.turnLeft(getAngVel(), getAngle());
+                    robMovement.turnLeftAngle(getAngVel(), getAngle());
                 }
             }
         });
@@ -315,10 +334,10 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (useTime()) {
-                    robMovement.turnRight(getAngVel(), getTime());
+                    robMovement.turnRightTime(getAngVel(), getTime());
                 }
                 else {
-                    robMovement.turnRight(getAngVel(), getAngle());
+                    robMovement.turnRightAngle(getAngVel(), getAngle());
                 }
             }
         });
@@ -400,7 +419,7 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //PAN COMMAND
-                rob.movePan(getAngVel(), seekBar.getProgress());
+                rob.movePan((short)6, seekBar.getProgress());
             }
         });
 
@@ -418,7 +437,7 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //TILT COMMAND
-                rob.moveTilt(getAngVel(), seekBar.getProgress());
+                rob.moveTilt((short)6, seekBar.getProgress());
             }
         });
 
@@ -455,6 +474,28 @@ public class RobMovementActivity extends Activity {
 
         return radioTime.isChecked();
 
+    }
+
+
+    private void updateBattery() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                txtBattery.setText(String.valueOf(batteryStatus.getBattery()) + " ("+getWallConnectionStatus()+")");
+            }
+        });
+
+    }
+
+
+    private String getWallConnectionStatus() {
+        if (this.wallConnectionStatus.getWallConnetion() == (byte)1) {
+            return "charging";
+        }
+        else {
+            return "uncharging";
+        }
     }
 
 

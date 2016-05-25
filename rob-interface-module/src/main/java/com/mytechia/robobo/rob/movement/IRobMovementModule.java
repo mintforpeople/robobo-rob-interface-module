@@ -32,21 +32,22 @@ import com.mytechia.robobo.framework.IModule;
 public interface IRobMovementModule extends IModule {
 
 
-    public void moveForwards(short velocity, long time);
-    public void moveForwards(short velocity, int angle);
+    public void moveForwardsTime(short velocity, long time);
+    public void moveForwardsAngle(short velocity, int angle);
 
-    public void moveBackwards(short velocity, long time);
-    public void moveBackwards(short velocity, int angle);
+    public void moveBackwardsTime(short velocity, long time);
+    public void moveBackwardsAngle(short velocity, int angle);
 
     public void stop();
 
-    public void turnLeft(short velocity, long time);
-    public void turnLeft(short velocity, int angle);
-    public void turnLeftBackwards(short velocity, long time);
+    public void turnLeftTime(short velocity, long time);
+    public void turnLeftAngle(short velocity, int angle);
 
-    public void turnRight(short velocity, long time);
-    public void turnRight(short velocity, int angle);
-    public void turnRightBackwards(short velocity, long time);
+    public void turnRightTime(short velocity, long time);
+    public void turnRightAngle(short velocity, int angle);
+
+    public void turnLeftBackwardsTime(short velocity, long time);
+    public void turnRightBackwardsTime(short velocity, long time);
 
 
 }

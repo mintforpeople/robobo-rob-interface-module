@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.mytechia.robobo.rob.DefaultRob;
 import com.mytechia.robobo.rob.LEDsModeEnum;
+import com.mytechia.robobo.rob.MoveMTMode;
 import com.mytechia.robobo.rob.comm.SmpRobComm;
 import com.mytechia.robobo.util.Color;
 
@@ -115,10 +116,11 @@ public class ButtonAdapter extends BaseAdapter {
         roboCommandsList.add("moveMTTimes");
         roboCommandsList.add("movePanAngles");
         roboCommandsList.add("moveTiltAngles");
-        roboCommandsList.add("movePanTime");
-        roboCommandsList.add("moveTiltTime");
         roboCommandsList.add("resetPanTiltOffset");
         roboCommandsList.add("setRobStatusPeriod");
+        roboCommandsList.add("configureInfrared");
+        roboCommandsList.add("maxValueMotors");
+        roboCommandsList.add("setOperationMode");
 
     }
 
@@ -129,10 +131,10 @@ public class ButtonAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                int led = 23;
-                int red = 123;
-                int green = 4090;
-                int blue = 300;
+                int led = 2;
+                int red = 4095;
+                int green = 4095;
+                int blue = 0;
 
                 defaultRob.setLEDColor(led, new Color(red, green, blue));
             }
@@ -143,7 +145,7 @@ public class ButtonAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                LEDsModeEnum mode = LEDsModeEnum.DETECT_FALL;
+                LEDsModeEnum mode = LEDsModeEnum.INFRARED_AND_DETECT_FALL;
 
                 defaultRob.setLEDsMode(mode);
 
@@ -156,11 +158,11 @@ public class ButtonAdapter extends BaseAdapter {
             public void onClick(View v) {
 
                 short angVel1 = 100;
-                short angle1 = 30000;
-                short angVel2 = 100;
-                short angle2 = 30000;
+                int angle1 = 180;
+                short angVel2 = 200;
+                int angle2 = 10_000;
 
-                //defaultRob.moveMT(angVel1, angle1, angVel2, angle2);
+                defaultRob.moveMT(MoveMTMode.FORWARD_FORWARD, angVel1, angle1, angVel2, angle2);
 
             }
         });
@@ -170,14 +172,17 @@ public class ButtonAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                int angVel1 = 101;
-                int angVel2 = 671;
-                long time = 60;
+                short angVel1 = 100;
+                short angVel2 = 100;
+                long time=10000;
 
-                //defaultRob.moveMT(angVel1, angVel2, time);
+                defaultRob.moveMT(MoveMTMode.FORWARD_FORWARD, angVel1,  angVel2, time);
 
             }
         });
+
+
+
 
 
         mapRoboCommands.put(roboCommandsList.get(4), new View.OnClickListener() {
@@ -209,14 +214,15 @@ public class ButtonAdapter extends BaseAdapter {
         });
 
 
+
+
         mapRoboCommands.put(roboCommandsList.get(6), new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                short angVel = 10;
-                long time = 45;
 
-                defaultRob.movePan(angVel, (int)time);
+                defaultRob.resetPanTiltOffset();
+
             }
         });
 
@@ -225,10 +231,9 @@ public class ButtonAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                short angVel = 16;
-                long time = 45;
 
-                defaultRob.moveTilt(angVel, (int)time);
+                defaultRob.setRobStatusPeriod(2000);
+
             }
         });
 
@@ -238,24 +243,34 @@ public class ButtonAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                defaultRob.resetPanTiltOffset();
+                smpRobComm.infraredConfiguration((byte)3, (byte)3, (byte)192, (byte)8);
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                smpRobComm.infraredConfiguration((byte)3, (byte)4, (byte)0, (byte)135);
             }
         });
-
 
         mapRoboCommands.put(roboCommandsList.get(9), new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                //int led = 23;
-                //int red = 123;
-                //int green = 4090;
-                //int blue = 300;
-
-                smpRobComm.setRobStatusPeriod(2000);
+                defaultRob.maxValueMotors(12, 12, 13, 13, 15, 15, 16, 16);
             }
         });
+
+        mapRoboCommands.put(roboCommandsList.get(10), new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                defaultRob.setOperationMode((byte) 1);
+            }
+        });
+
 
     }
 }

@@ -130,7 +130,7 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
             this.smpRoboCom.setRobStatusPeriod(1000);
 
-            this.smpRoboCom.setLEDsMode((byte)8);
+            this.smpRoboCom.setOperationMode((byte)1);
 
         }
         catch(IOException e) {

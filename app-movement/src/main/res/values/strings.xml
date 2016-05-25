@@ -22,4 +22,5 @@
     <string name="lblTiltBar">Tilt</string>
     <string name="lblStatusPeriod">Period</string>
     <string name="lblLastStatus">Last Status</string>
+    <string name="lblBattery">Battery</string>
 </resources>
