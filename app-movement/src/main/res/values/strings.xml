@@ -4,7 +4,7 @@
     <string name="btnBackward">Backwards</string>
     <string name="btnTurnLeft">Turn Left</string>
     <string name="btnTurnRight">Turn Right</string>
-    <string name="btnStop">Stop</string>
+    <string name="btnStop">STOP</string>
     <string name="sBtnAngVel">Vel.</string>
     <string name="sBtnAng">Ang.</string>
     <string name="lblTime">Time</string>

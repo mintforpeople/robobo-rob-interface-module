@@ -23,46 +23,59 @@
 package com.mytechia.robobo.rob.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import com.mytechia.robobo.framework.FrameworkManager;
+import com.mytechia.robobo.framework.RoboboManager;
 import com.mytechia.robobo.framework.exception.ModuleNotFoundException;
+import com.mytechia.robobo.framework.service.RoboboServiceHelper;
 import com.mytechia.robobo.rob.BatteryStatus;
 import com.mytechia.robobo.rob.FallStatus;
 import com.mytechia.robobo.rob.GapStatus;
+import com.mytechia.robobo.rob.IRSensorStatus;
 import com.mytechia.robobo.rob.IRob;
 import com.mytechia.robobo.rob.IRobInterfaceModule;
 import com.mytechia.robobo.rob.IRobStatusListener;
 import com.mytechia.robobo.rob.MotorStatus;
-import com.mytechia.robobo.rob.MoveMTMode;
 import com.mytechia.robobo.rob.movement.IRobMovementModule;
+
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Date;
 
-/** Custom Robobo display activity that provide control to move the ROB
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.core.ConsoleAppender;
+
+/** Custom Robobo display activity that provides a remote control of the ROB
  *
  * @author Gervasio Varela
  */
 public class RobMovementActivity extends Activity {
 
-    private FrameworkManager roboboManager;
+
+    private RoboboServiceHelper roboboHelper;
+    private RoboboManager roboboManager;
     private IRobMovementModule robMovement;
     private IRobInterfaceModule robModule;
     private IRob rob;
 
-    private Button btnForwards;
-    private Button btnBackwards;
-    private Button btnTurnLeft;
-    private Button btnTurnRight;
+    private ImageButton btnForwards;
+    private ImageButton btnBackwards;
+    private ImageButton btnTurnLeft;
+    private ImageButton btnTurnRight;
     private Button btnStop;
 
     private TextView lblTime;
@@ -91,18 +104,22 @@ public class RobMovementActivity extends Activity {
     private TextView txtLastStatus;
 
 
+    private ProgressDialog waitDialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rob_movement);
 
+        this.waitDialog = ProgressDialog.show(this, "Connecting to Robobo", "Please wait...", true);
 
-        this.btnForwards = (Button) findViewById(R.id.btnForward);
-        this.btnBackwards = (Button) findViewById(R.id.btnBarckward);
-        this.btnTurnLeft = (Button) findViewById(R.id.btnTurnLeft);
-        this.btnTurnRight = (Button) findViewById(R.id.btnTurnRight);
+
+        this.btnForwards = (ImageButton) findViewById(R.id.btnForward);
+        this.btnBackwards = (ImageButton) findViewById(R.id.btnBarckward);
+        this.btnTurnLeft = (ImageButton) findViewById(R.id.btnTurnLeft);
+        this.btnTurnRight = (ImageButton) findViewById(R.id.btnTurnRight);
         this.btnStop = (Button) findViewById(R.id.btnStop);
 
         this.lblTime = (TextView) findViewById(R.id.lblTime);
@@ -136,8 +153,33 @@ public class RobMovementActivity extends Activity {
         this.txtLastStatus = (TextView) findViewById(R.id.txtLastStatus);
 
 
+        roboboHelper = new RoboboServiceHelper(this, new RoboboServiceHelper.Listener() {
+            @Override
+            public void onRoboboManagerStarted(RoboboManager robobo) {
+                roboboManager = robobo;
+                startRoboboApplication();
+                waitDialog.dismiss();
+            }
 
-        this.roboboManager = FrameworkManager.getInstance();
+            @Override
+            public void onError(String errorMsg) {
+                showErrorDialog(errorMsg);
+            }
+        });
+        roboboHelper.bindRoboboService();
+
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        roboboHelper.unbindRoboboService();
+    }
+
+    private void startRoboboApplication() {
+
         try {
 
             this.robMovement = this.roboboManager.getModuleInstance(IRobMovementModule.class);
@@ -148,6 +190,89 @@ public class RobMovementActivity extends Activity {
             e.printStackTrace();
         }
 
+
+        setViewListeners();
+
+
+        setRobStatusListener();
+
+    }
+
+
+    private void setRobStatusListener() {
+
+        this.rob.addRobStatusListener(new IRobStatusListener() {
+            @Override
+            public void statusMotorsMT(MotorStatus motorStatus, MotorStatus motorStatus1) {
+                Log.d("MOVEMENT", "Motor MT "+motorStatus+" - "+motorStatus1);
+                setMotor(txtLeft, motorStatus);
+                setMotor(txtRight, motorStatus1);
+                updateLastStatus();
+            }
+
+            @Override
+            public void statusMotorPan(MotorStatus motorStatus) {
+                Log.d("MOVEMENT", "Motor Pan");
+                setMotor(txtPan, motorStatus);
+                updateLastStatus();
+            }
+
+            @Override
+            public void statusMotorTilt(MotorStatus motorStatus) {
+                Log.d("MOVEMENT", "Motor Tilt");
+                setMotor(txtTilt, motorStatus);
+                updateLastStatus();
+            }
+
+            @Override
+            public void statusGaps(Collection<GapStatus> gapStatus) {
+                Log.d("MOVEMENT", "Gaps");
+                final Collection<GapStatus> gaps = gapStatus;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setGaps(gaps);
+                    }
+                });
+                updateLastStatus();
+            }
+
+            @Override
+            public void statusFalls(Collection<FallStatus> fallStatus) {
+                Log.d("MOVEMENT", "Falls");
+                final Collection<FallStatus> falls = fallStatus;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setFalls(falls);
+                    }
+                });
+                updateLastStatus();
+            }
+
+            @Override
+            public void statusBattery(BatteryStatus batteryStatus) {
+                Log.d("MOVEMENT", "Battery");
+                updateLastStatus();
+            }
+
+            @Override
+            public void statusIRSensorStatus(final Collection<IRSensorStatus> irSensorStatus) {
+                Log.d("MOVEMENT", "IRs");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setIRs(irSensorStatus);
+                    }
+                });
+                updateLastStatus();
+            }
+        });
+
+    }
+
+
+    private void setViewListeners() {
 
         //MOVEMENT BUTTONS MANAGEMENT
         this.btnForwards.setOnClickListener(new View.OnClickListener() {
@@ -317,65 +442,6 @@ public class RobMovementActivity extends Activity {
             }
         });
 
-
-
-        this.rob.addRobStatusListener(new IRobStatusListener() {
-            @Override
-            public void statusMotorsMT(MotorStatus motorStatus, MotorStatus motorStatus1) {
-                Log.d("MOVEMENT", "Motor MT "+motorStatus+" - "+motorStatus1);
-                setMotor(txtLeft, motorStatus);
-                setMotor(txtRight, motorStatus1);
-                updateLastStatus();
-            }
-
-            @Override
-            public void statusMotorPan(MotorStatus motorStatus) {
-                Log.d("MOVEMENT", "Motor Pan");
-                setMotor(txtPan, motorStatus);
-                updateLastStatus();
-            }
-
-            @Override
-            public void statusMotorTilt(MotorStatus motorStatus) {
-                Log.d("MOVEMENT", "Motor Tilt");
-                setMotor(txtTilt, motorStatus);
-                updateLastStatus();
-            }
-
-            @Override
-            public void statusGaps(Collection<GapStatus> gapStatus) {
-                Log.d("MOVEMENT", "Gaps");
-                final Collection<GapStatus> gaps = gapStatus;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setGaps(gaps);
-                    }
-                });
-                updateLastStatus();
-            }
-
-            @Override
-            public void statusFalls(Collection<FallStatus> fallStatus) {
-                Log.d("MOVEMENT", "Falls");
-                final Collection<FallStatus> falls = fallStatus;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setFalls(falls);
-                    }
-                });
-                updateLastStatus();
-            }
-
-            @Override
-            public void statusBattery(BatteryStatus batteryStatus) {
-                Log.d("MOVEMENT", "Battery");
-                updateLastStatus();
-            }
-        });
-
-
     }
 
 
@@ -449,6 +515,19 @@ public class RobMovementActivity extends Activity {
 
     }
 
+    private void setIRs(Collection<IRSensorStatus> irSensorStatus) {
+
+        StringBuilder sb = new StringBuilder("");
+
+        for(IRSensorStatus ir : irSensorStatus) {
+            sb.append(ir.getDistance());
+            sb.append(" ");
+        }
+
+        this.txtIRs.setText(sb.toString());
+
+    }
+
 
     private int getTime() {
         return this.skBarTime.getProgress();
@@ -470,6 +549,30 @@ public class RobMovementActivity extends Activity {
                 txtLastStatus.setText((new Date()).toString());
             }
         });
+    }
+
+
+    /** Shows an error dialog with the message 'msg'
+     *
+     * @param msg the message to be shown in the error dialog
+     */
+    protected void showErrorDialog(String msg) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(com.mytechia.robobo.framework.R.string.title_error_dialog).
+                setMessage(msg);
+        builder.setPositiveButton(com.mytechia.robobo.framework.R.string.ok_msg, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                System.exit(0);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
 

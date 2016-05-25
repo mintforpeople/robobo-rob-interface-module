@@ -2,6 +2,9 @@
 
 buildscript {
     repositories {
+        maven {
+            url "http://bizancio:7080/nexus/content/groups/public"
+        }
         mavenLocal()
         mavenCentral()
     }
@@ -15,6 +18,9 @@ buildscript {
 
 allprojects {
     repositories {
+        maven {
+            url "http://bizancio:7080/nexus/content/groups/public"
+        }
         mavenLocal()
         mavenCentral()
     }

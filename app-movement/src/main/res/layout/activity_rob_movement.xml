@@ -103,7 +103,7 @@
         android:layout_column="0"
         android:layout_columnSpan="3" />
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btnForward"
@@ -112,9 +112,10 @@
         android:layout_column="1"
         android:layout_gravity="center_horizontal"
         android:minWidth="100dp"
-        android:minHeight="50dp" />
+        android:minHeight="50dp"
+        android:src="@drawable/up" />
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btnTurnLeft"
@@ -123,7 +124,8 @@
         android:layout_column="0"
         android:layout_gravity="center_horizontal|right"
         android:minWidth="100dp"
-        android:minHeight="50dp" />
+        android:minHeight="50dp"
+        android:src="@drawable/left" />
 
     <Button
         android:layout_width="wrap_content"
@@ -136,7 +138,7 @@
         android:minWidth="100dp"
         android:minHeight="50dp" />
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btnTurnRight"
@@ -145,9 +147,10 @@
         android:layout_column="2"
         android:layout_gravity="center_horizontal|left"
         android:minWidth="100dp"
-        android:minHeight="50dp" />
+        android:minHeight="50dp"
+        android:src="@drawable/right" />
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btnBackward"
@@ -156,7 +159,8 @@
         android:layout_column="1"
         android:layout_gravity="center_horizontal"
         android:minWidth="100dp"
-        android:minHeight="50dp" />
+        android:minHeight="50dp"
+        android:src="@drawable/down" />
 
     <TextView
         android:layout_width="wrap_content"

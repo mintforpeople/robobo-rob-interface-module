@@ -36,15 +36,48 @@ import com.mytechia.commons.framework.simplemessageprotocol.exception.TimeoutExc
 import com.mytechia.commons.util.collections.bytequeue.ArrayByteQueue;
 import com.mytechia.commons.util.collections.bytequeue.exception.FullByteQueueException;
 
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.core.ConsoleAppender;
+
 /**
  * Created by julio on 29/03/16.
  */
 public class AndroidBluetoothSPPChannel implements IBasicCommunicationChannel{
+
+    static {
+
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+        loggerContext.reset();
+
+
+        Logger root = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
+
+
+        PatternLayoutEncoder patternLayout = new PatternLayoutEncoder();
+        patternLayout.setContext(loggerContext);
+        patternLayout.setPattern("%d{dd/MM/yyyy-HH:mm:ss} %-5p: %-20c{1} - %m%n");
+        patternLayout.start();
+
+        ConsoleAppender consoleAppender= new ConsoleAppender();
+        consoleAppender.setName("default-console");
+        consoleAppender.setEncoder(patternLayout);
+        consoleAppender.start();
+
+        root.setLevel(Level.INFO);
+
+        root.addAppender(consoleAppender);
+    }
 
     private static final String TAG_ANDROID_BLUETOOTH_SPPCHANNEL =AndroidBluetoothSPPChannel.class.getName();
 

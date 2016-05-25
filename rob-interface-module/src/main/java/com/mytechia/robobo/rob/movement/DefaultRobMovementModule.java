@@ -3,7 +3,7 @@ package com.mytechia.robobo.rob.movement;
 import android.util.Log;
 
 import com.mytechia.commons.framework.exception.InternalErrorException;
-import com.mytechia.robobo.framework.FrameworkManager;
+import com.mytechia.robobo.framework.RoboboManager;
 import com.mytechia.robobo.rob.BatteryStatus;
 import com.mytechia.robobo.rob.BumpStatus;
 import com.mytechia.robobo.rob.FallStatus;
@@ -100,7 +100,7 @@ public class DefaultRobMovementModule implements IRobMovementModule {
 
 
     @Override
-    public void startup(FrameworkManager manager) throws InternalErrorException {
+    public void startup(RoboboManager manager) throws InternalErrorException {
 
         this.robModule = manager.getModuleInstance(IRobInterfaceModule.class);
         if (this.robModule != null) {
