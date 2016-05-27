@@ -23,4 +23,14 @@
     <string name="lblStatusPeriod">Period</string>
     <string name="lblLastStatus">Last Status</string>
     <string name="lblBattery">Battery</string>
+    <string name="btnResetPanTilt">Reset P/T</string>
+    <string name="tglModeOn">SECURE</string>
+    <string name="tglModeOff">UNSECURE</string>
+    <string name="btnLed">IR LEDs</string>
+    <string name="tglLedsOn">IR LEDs</string>
+    <string name="tglLedsOff">IR LEDs</string>
+    <string name="dialogWaitConnectionTitle">Connecting to Robobo Platform</string>
+    <string name="dialogWaitConnectionMsg">Please wait...</string>
+    <string name="txtBatteryCharging">charging</string>
+    <string name="txtBatteryDischarging">discharging</string>
 </resources>

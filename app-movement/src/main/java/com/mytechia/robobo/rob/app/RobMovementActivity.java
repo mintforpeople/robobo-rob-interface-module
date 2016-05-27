@@ -2,6 +2,7 @@
  *
  *   Copyright 2016 Mytech Ingenieria Aplicada <http://www.mytechia.com>
  *   Copyright 2016 Gervasio Varela <gervasio.varela@mytechia.com>
+ *   Copyright 2016 Julio Gómez <julio.gomez@mytechia.com>
  *
  *   This file is part of Robobo Framework Library.
  *
@@ -30,10 +31,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.mytechia.robobo.framework.RoboboManager;
 import com.mytechia.robobo.framework.exception.ModuleNotFoundException;
@@ -45,20 +47,13 @@ import com.mytechia.robobo.rob.IRSensorStatus;
 import com.mytechia.robobo.rob.IRob;
 import com.mytechia.robobo.rob.IRobInterfaceModule;
 import com.mytechia.robobo.rob.IRobStatusListener;
+import com.mytechia.robobo.rob.LEDsModeEnum;
 import com.mytechia.robobo.rob.MotorStatus;
 import com.mytechia.robobo.rob.WallConnectionStatus;
 import com.mytechia.robobo.rob.movement.IRobMovementModule;
 
-import org.slf4j.LoggerFactory;
-
 import java.util.Collection;
 import java.util.Date;
-
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.core.ConsoleAppender;
 
 /** Custom Robobo display activity that provides a remote control of the ROB
  *
@@ -73,6 +68,7 @@ public class RobMovementActivity extends Activity {
     private IRobInterfaceModule robModule;
     private IRob rob;
 
+
     private ImageButton btnForwards;
     private ImageButton btnBackwards;
     private ImageButton btnTurnLeft;
@@ -85,9 +81,6 @@ public class RobMovementActivity extends Activity {
     private SeekBar skBarAngVel;
     private TextView lblAngle;
     private SeekBar skBarAngle;
-
-    private RadioButton radioTime;
-    private RadioButton radioAngle;
 
     private TextView lblBarPan;
     private SeekBar skBarPan;
@@ -102,6 +95,11 @@ public class RobMovementActivity extends Activity {
     private TextView lblPeriod;
     private SeekBar skBarPeriod;
 
+
+    private Button btnReset;
+    private ToggleButton tglMode;
+    private ToggleButton tglLeds;
+
     private TextView txtBattery;
 
     private TextView txtLastStatus;
@@ -109,6 +107,8 @@ public class RobMovementActivity extends Activity {
 
     private BatteryStatus batteryStatus;
     private WallConnectionStatus wallConnectionStatus;
+
+    private boolean useTime = true;
 
     private ProgressDialog waitDialog;
 
@@ -119,15 +119,20 @@ public class RobMovementActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rob_movement);
 
-        this.waitDialog = ProgressDialog.show(this, "Connecting to Robobo", "Please wait...", true);
+        //wait to dialog shown during the startup of the framework and the bluetooth connection
+        this.waitDialog = ProgressDialog.show(this,
+                getString(R.string.dialogWaitConnectionTitle),
+                getString(R.string.dialogWaitConnectionMsg), true);
 
 
+        //buttons for movement control
         this.btnForwards = (ImageButton) findViewById(R.id.btnForward);
         this.btnBackwards = (ImageButton) findViewById(R.id.btnBarckward);
         this.btnTurnLeft = (ImageButton) findViewById(R.id.btnTurnLeft);
         this.btnTurnRight = (ImageButton) findViewById(R.id.btnTurnRight);
         this.btnStop = (Button) findViewById(R.id.btnStop);
 
+        //bars for movement control
         this.lblTime = (TextView) findViewById(R.id.lblTime);
         this.skBarTime = (SeekBar) findViewById(R.id.skBarTime);
         this.lblAngVel = (TextView) findViewById(R.id.lblAngVel);
@@ -135,45 +140,76 @@ public class RobMovementActivity extends Activity {
         this.lblAngle = (TextView) findViewById(R.id.lblAngle);
         this.skBarAngle = (SeekBar) findViewById(R.id.skBarAngle);
 
-        this.radioTime = (RadioButton) findViewById(R.id.radioTime);
-        this.radioAngle = (RadioButton) findViewById(R.id.radioAngle);
-
+        //bars for pan & tilt
         this.lblBarPan = (TextView) findViewById(R.id.lblPanBar);
         this.skBarPan = (SeekBar) findViewById(R.id.skBarPan);
         this.lblBarTilt = (TextView) findViewById(R.id.lblTiltBar);
         this.skBarTilt = (SeekBar) findViewById(R.id.skBarTilt);
 
 
+        //views for sensors
         this.txtGaps = (TextView) findViewById(R.id.txtGaps);
         this.txtFalls = (TextView) findViewById(R.id.txtFalls);
         this.txtIRs = (TextView) findViewById(R.id.txtIRs);
-
         this.txtPan = (TextView) findViewById(R.id.txtPan);
         this.txtTilt = (TextView) findViewById(R.id.txtTilt);
         this.txtLeft = (TextView) findViewById(R.id.txtLeft);
         this.txtRight = (TextView) findViewById(R.id.txtRight);
+        this.txtBattery = (TextView) findViewById(R.id.txtBattery);
 
+        //bar for the status period
         this.lblPeriod = (TextView) findViewById(R.id.lblStatusPeriod);
         this.skBarPeriod = (SeekBar) findViewById(R.id.skBarStatusPeriod);
 
-        this.txtBattery = (TextView) findViewById(R.id.txtBattery);
+        //button bar with some utility buttons
+        this.btnReset = (Button) findViewById(R.id.btnResetPanTilt);
+        this.tglMode = (ToggleButton) findViewById(R.id.tglMode);
+        this.tglLeds = (ToggleButton) findViewById(R.id.tglLeds);
 
+        //last time where an status update was received
         this.txtLastStatus = (TextView) findViewById(R.id.txtLastStatus);
 
 
+        //we use the RoboboServiceHelper class to manage the startup and binding
+        //of the Robobo Manager service and Robobo modules
         roboboHelper = new RoboboServiceHelper(this, new RoboboServiceHelper.Listener() {
             @Override
             public void onRoboboManagerStarted(RoboboManager robobo) {
+
+                //the robobo service and manager have been started up
                 roboboManager = robobo;
-                startRoboboApplication();
+
+                //dismiss the wait dialog
                 waitDialog.dismiss();
+
+                //start the "custom" robobo application
+                startRoboboApplication();
+
             }
 
             @Override
             public void onError(String errorMsg) {
-                showErrorDialog(errorMsg);
+
+                final String error = errorMsg;
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        //dismiss the wait dialog
+                        waitDialog.dismiss();
+
+                        //show an error dialog
+                        showErrorDialog(error);
+
+                    }
+                });
+
             }
+
         });
+
+        //start & bind the Robobo service
         roboboHelper.bindRoboboService();
 
 
@@ -182,31 +218,48 @@ public class RobMovementActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
+
+        //we unbind and (maybe) stop the Robobo service on exit
         roboboHelper.unbindRoboboService();
+
     }
 
+
+    /** Starts our "custom" Robobo application
+     */
     private void startRoboboApplication() {
 
         try {
 
+            //easy-to-use platform movement module
             this.robMovement = this.roboboManager.getModuleInstance(IRobMovementModule.class);
+
+            //low-level platform control module
             this.robModule = this.roboboManager.getModuleInstance(IRobInterfaceModule.class);
             this.rob = this.robModule.getRobInterface();
 
         } catch (ModuleNotFoundException e) {
-            e.printStackTrace();
+            showErrorDialog(e.getMessage());
         }
 
+        //configure the listeners for the different view objects of the GUI
+        setMovementBarsListeners();
+        setMovementButtonsListeners();
+        setPanTiltBarsListeners();
+        setStatusPeriodBarListener();
+        setButtonBarListeners();
 
-        setViewListeners();
 
-
+        //configure a listener to receive status data from the Robobo platform
         setRobStatusListener();
 
     }
 
 
+    /** Configures a listener to receive periodic status information from the Robobo platform.
+     */
     private void setRobStatusListener() {
 
         this.rob.addRobStatusListener(new IRobStatusListener() {
@@ -291,13 +344,13 @@ public class RobMovementActivity extends Activity {
     }
 
 
-    private void setViewListeners() {
+    private void setMovementButtonsListeners() {
 
-        //MOVEMENT BUTTONS MANAGEMENT
+        //forward button
         this.btnForwards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (useTime()) {
+                if (useTime) {
                     robMovement.moveForwardsTime(getAngVel(), getTime());
                 }
                 else {
@@ -306,10 +359,11 @@ public class RobMovementActivity extends Activity {
             }
         });
 
+        //backward button
         this.btnBackwards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (useTime()) {
+                if (useTime) {
                     robMovement.moveBackwardsTime(getAngVel(), getTime());
                 }
                 else {
@@ -318,10 +372,11 @@ public class RobMovementActivity extends Activity {
             }
         });
 
+        //turn left button
         this.btnTurnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (useTime()) {
+                if (useTime) {
                     robMovement.turnLeftTime(getAngVel(), getTime());
                 }
                 else {
@@ -330,10 +385,11 @@ public class RobMovementActivity extends Activity {
             }
         });
 
+        //turn right button
         this.btnTurnRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (useTime()) {
+                if (useTime) {
                     robMovement.turnRightTime(getAngVel(), getTime());
                 }
                 else {
@@ -342,6 +398,7 @@ public class RobMovementActivity extends Activity {
             }
         });
 
+        //stop all movement button
         this.btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -349,115 +406,156 @@ public class RobMovementActivity extends Activity {
             }
         });
 
+    }
+
+
+    private void setButtonBarListeners() {
+
+        //pan/tilt reset
+        this.btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rob.resetPanTiltOffset();
+            }
+        });
+
+        //secure/unsecure movement mode
+        this.tglMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    rob.setLEDsMode(LEDsModeEnum.INFRARED_AND_DETECT_FALL);
+                }
+                else {
+                    rob.setLEDsMode(LEDsModeEnum.NONE);
+                }
+            }
+        });
+
+        //ir led toggle mode
+        this.tglMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    rob.setOperationMode((byte)0);
+                }
+                else {
+                    rob.setOperationMode((byte)1);
+                }
+            }
+        });
+
+    }
+
+
+
+    private void setStatusPeriodBarListener() {
+
+        //STATUS PERIOD BAR
+        this.skBarPeriod.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //update label value
+                setLblValue(lblPeriod, R.string.lblStatusPeriod, progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                //CHANGE STATUS PERIOD
+                rob.setRobStatusPeriod(seekBar.getProgress());
+            }
+        });
+
+    }
+
+
+    private void setMovementBarsListeners() {
 
         //MOVEMENT SEEK BAR MAGANEMENT
         this.skBarAngVel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //the angular velocity bar has been changed, update the value in the label
                 setLblValue(lblAngVel, R.string.lblAngVel, progress);
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
         this.skBarTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //the time bar has been changed, set the mode to USE TIME and update the value in the label
+                useTime();
                 setLblValue(lblTime, R.string.lblTime, progress);
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
         this.skBarAngle.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //the angle bar has been changed, set the mode to USE ANGLE and update the value in the label
+                useAngle();
                 setLblValue(lblAngle, R.string.lblAngle, progress);
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
+    }
 
+
+    private void setPanTiltBarsListeners() {
 
         //PAN & TILT SEEK BAR MANAGEMENT
         this.skBarPan.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //update label value
                 setLblValue(lblBarPan, R.string.lblPanBar, progress);
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                //PAN COMMAND
-                rob.movePan((short)6, seekBar.getProgress());
+                //send a move PAN command
+                robMovement.movePan(seekBar.getProgress());
             }
         });
 
         this.skBarTilt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //update label value
                 setLblValue(lblBarTilt, R.string.lblTiltBar, progress);
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                //TILT COMMAND
-                rob.moveTilt((short)6, seekBar.getProgress());
-            }
-        });
-
-
-        //STATUS PERIOD BAR
-        this.skBarPeriod.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                setLblValue(lblPeriod, R.string.lblStatusPeriod, progress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                //CHANGE STATUS PERIOD
-                rob.setRobStatusPeriod(seekBar.getProgress());
+                //send a move TILT command
+                robMovement.moveTilt(seekBar.getProgress());
             }
         });
 
@@ -470,13 +568,33 @@ public class RobMovementActivity extends Activity {
     }
 
 
-    private boolean useTime() {
+    /** Configures the app and UI to use time for the movement commands
+     */
+    private void useTime() {
+        this.useTime = true;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                skBarAngle.setProgress(0);
+            }
+        });
+    }
 
-        return radioTime.isChecked();
-
+    /** Configures the app and UI to use the angle for the movement commands
+     */
+    private void useAngle() {
+        this.useTime = false;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                skBarTime.setProgress(0);
+            }
+        });
     }
 
 
+    /** Updates the battery information in the GUI
+     */
     private void updateBattery() {
 
         runOnUiThread(new Runnable() {
@@ -491,14 +609,19 @@ public class RobMovementActivity extends Activity {
 
     private String getWallConnectionStatus() {
         if (this.wallConnectionStatus.getWallConnetion() == (byte)1) {
-            return "charging";
+            return getString(R.string.txtBatteryCharging);
         }
         else {
-            return "uncharging";
+            return getString(R.string.txtBatteryDischarging);
         }
     }
 
 
+    /** Updates the motors information in the GUI
+     *
+     * @param txtMotor
+     * @param motors
+     */
     private void setMotor(final TextView txtMotor, MotorStatus motors) {
 
         final StringBuilder sb = new StringBuilder("");
@@ -519,6 +642,10 @@ public class RobMovementActivity extends Activity {
     }
 
 
+    /** Updates the Gap detection information in the GUI
+     *
+     * @param gaps
+     */
     private void setGaps(Collection<GapStatus> gaps) {
 
         StringBuilder sb = new StringBuilder("");
@@ -538,6 +665,10 @@ public class RobMovementActivity extends Activity {
     }
 
 
+    /** Updates the Fall detection information in the GUI
+     *
+     * @param falls
+     */
     private void setFalls(Collection<FallStatus> falls) {
 
         StringBuilder sb = new StringBuilder("");
@@ -556,6 +687,10 @@ public class RobMovementActivity extends Activity {
 
     }
 
+    /** Updates the IR sensors status in the GUI
+     *
+     * @param irSensorStatus
+     */
     private void setIRs(Collection<IRSensorStatus> irSensorStatus) {
 
         StringBuilder sb = new StringBuilder("");
@@ -570,19 +705,30 @@ public class RobMovementActivity extends Activity {
     }
 
 
+    /** Gets the time of movement from the time bar
+     * @return the time of movement (ms)
+     */
     private int getTime() {
         return this.skBarTime.getProgress();
     }
 
+    /** Gets the angular velocity of movement from the angular velocity bar
+     * @return the angle of movement (ms)
+     */
     private short getAngVel() {
         return (short) this.skBarAngVel.getProgress();
     }
 
+    /** Gets the angle of movement from the angle bar
+     * @return the angle of movement (ms)
+     */
     private int getAngle() {
         return this.skBarAngle.getProgress();
     }
 
 
+    /** Updates the time of the last platform status message received.
+     */
     private void updateLastStatus() {
         runOnUiThread(new Runnable() {
             @Override

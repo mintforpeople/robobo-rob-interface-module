@@ -1,3 +1,26 @@
+/*******************************************************************************
+ *
+ *   Copyright 2016 Mytech Ingenieria Aplicada <http://www.mytechia.com>
+ *   Copyright 2016 Gervasio Varela <gervasio.varela@mytechia.com>
+ *   Copyright 2016 Julio Gómez <julio.gomez@mytechia.com>
+ *
+ *   This file is part of Robobo ROB Interface Module.
+ *
+ *   Robobo ROB Interface Module is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU Lesser General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   Robobo ROB Interface Module is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Lesser General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Lesser General Public License
+ *   along with Robobo ROB Interface Module.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ******************************************************************************/
+
 package com.mytechia.robobo.rob.movement;
 
 import android.util.Log;
@@ -29,6 +52,8 @@ public class DefaultRobMovementModule implements IRobMovementModule {
 
     private static final String MODULE_INFO = "Robobo-ROB movement module.";
     private static final String MODULE_VERSION= "0.1.0";
+
+    private static final short MAX_PANTILT_VELOCITY = (short) 6; //safe velocity
 
     private IRobInterfaceModule robModule;
     private IRob rob;
@@ -102,6 +127,17 @@ public class DefaultRobMovementModule implements IRobMovementModule {
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)0, (byte)velocity, time);
     }
 
+    @Override
+    public void movePan(int angle) {
+        Log.d("ROB-INTERFACE", String.format("Move pan: %d ", angle));
+        this.rob.movePan(MAX_PANTILT_VELOCITY, angle);
+    }
+
+    @Override
+    public void moveTilt(int angle) {
+        Log.d("ROB-INTERFACE", String.format("Move tilt: %d ", angle));
+        this.rob.moveTilt(MAX_PANTILT_VELOCITY, angle);
+    }
 
 
 

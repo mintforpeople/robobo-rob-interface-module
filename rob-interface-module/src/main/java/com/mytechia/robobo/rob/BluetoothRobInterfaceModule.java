@@ -2,21 +2,22 @@
  *
  *   Copyright 2016 Mytech Ingenieria Aplicada <http://www.mytechia.com>
  *   Copyright 2016 Gervasio Varela <gervasio.varela@mytechia.com>
+ *   Copyright 2016 Julio Gómez <julio.gomez@mytechia.com>
  *
- *   This file is part of Robobo Framework Library.
+ *   This file is part of Robobo ROB Interface Module.
  *
- *   Robobo Framework Library is free software: you can redistribute it and/or modify
+ *   Robobo ROB Interface Module is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU Lesser General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
  *
- *   Robobo Framework Library is distributed in the hope that it will be useful,
+ *   Robobo ROB Interface Module is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU Lesser General Public License for more details.
  *
  *   You should have received a copy of the GNU Lesser General Public License
- *   along with Robobo Framework Library.  If not, see <http://www.gnu.org/licenses/>.
+ *   along with Robobo ROB Interface Module.  If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
 
@@ -33,17 +34,10 @@ import com.mytechia.robobo.framework.RoboboManager;
 import com.mytechia.robobo.rob.comm.RoboCommandFactory;
 import com.mytechia.robobo.rob.comm.SmpRobComm;
 
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.core.ConsoleAppender;
 
 /** Default implementation of the IRobInterfaceModule interface using bluetooth for communication
  * with a Robobo-ROB.
@@ -95,29 +89,23 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
             }
         }
 
+        //look for a Robobo bluetooth device paired with the phone
         Log.d("ROB-INTERFACE", "Looking for Robobo-ROB devices via bluetooth.");
-
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-
-        for(BluetoothDevice btDev : pairedDevices) {
-            if (btDev.getName().equals(ROB_NAME)) {
-                this.actualBluetoothDevice = btDev;
-            }
-        }
+        this.actualBluetoothDevice = lookForRoboboDevice();
 
         if (this.actualBluetoothDevice == null) {
             throw new InternalErrorException("Unable to find a Robobo-ROB bluetooth device.");
         }
 
         try {
+            //open a bluetoth connection with the device
             BluetoothSocket mmSocket = this.actualBluetoothDevice.createRfcommSocketToServiceRecord(UUID_BLUETOOTH_CONNECTION);
 
             if (smpRoboCom != null) {
                 smpRoboCom.stop();
             }
 
+            //create and configure the communciation channel
             this.androidBluetoothSPPChannel = new AndroidBluetoothSPPChannel(mmSocket, roboCommandFactory);
 
             androidBluetoothSPPChannel.connect();
@@ -128,15 +116,34 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
             this.smpRoboCom.start();
 
-            this.smpRoboCom.setRobStatusPeriod(1000);
+            //set the default operation mode to secure-movement
+            this.smpRoboCom.setOperationMode((byte)0);
 
-            this.smpRoboCom.setOperationMode((byte)1);
+            //set the default rob status period to 1 sec
+            this.smpRoboCom.setRobStatusPeriod(1000);
 
         }
         catch(IOException e) {
             throw new InternalErrorException(e);
         }
 
+
+    }
+
+
+    private BluetoothDevice lookForRoboboDevice() {
+
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+        for(BluetoothDevice btDev : pairedDevices) {
+            if (btDev.getName().equals(ROB_NAME)) {
+                return btDev;
+            }
+        }
+
+        return null;
 
     }
 
