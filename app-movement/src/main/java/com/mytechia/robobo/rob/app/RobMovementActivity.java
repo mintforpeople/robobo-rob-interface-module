@@ -41,6 +41,7 @@ import com.mytechia.robobo.framework.RoboboManager;
 import com.mytechia.robobo.framework.exception.ModuleNotFoundException;
 import com.mytechia.robobo.framework.service.RoboboServiceHelper;
 import com.mytechia.robobo.rob.BatteryStatus;
+import com.mytechia.robobo.rob.BluetoothRobInterfaceModule;
 import com.mytechia.robobo.rob.FallStatus;
 import com.mytechia.robobo.rob.GapStatus;
 import com.mytechia.robobo.rob.IRSensorStatus;
@@ -210,7 +211,9 @@ public class RobMovementActivity extends Activity {
         });
 
         //start & bind the Robobo service
-        roboboHelper.bindRoboboService();
+        Bundle options = new Bundle();
+        options.putString(BluetoothRobInterfaceModule.ROBOBO_BT_NAME_OPTION, "HC-06");
+        roboboHelper.bindRoboboService(options);
 
 
     }

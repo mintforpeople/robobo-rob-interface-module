@@ -26,6 +26,7 @@ package com.mytechia.robobo.rob;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.mytechia.commons.framework.exception.InternalErrorException;
@@ -54,6 +55,8 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
     private static final UUID UUID_BLUETOOTH_CONNECTION = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
+    public static final String ROBOBO_BT_NAME_OPTION = "robobo.bluetooth.name";
+
     private BluetoothDevice actualBluetoothDevice;
 
     private AndroidBluetoothSPPChannel androidBluetoothSPPChannel;
@@ -62,6 +65,9 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
     private RoboCommandFactory roboCommandFactory = new RoboCommandFactory();
     private DefaultRob defaultRob;
+
+
+    private Bundle options;
 
 
     /** Returns an instance of the IRob interface for send/receive commands to a Robobo-ROB
@@ -75,6 +81,8 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
     @Override
     public void startup(RoboboManager manager) throws InternalErrorException {
+
+        this.options = manager.getOptions();
 
         if(this.actualBluetoothDevice!=null){
 
@@ -124,7 +132,7 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
         }
         catch(IOException e) {
-            throw new InternalErrorException(e);
+            throw new InternalErrorException("Unable to connect to Robobo platform: "+getRobName());
         }
 
 
@@ -133,17 +141,33 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
     private BluetoothDevice lookForRoboboDevice() {
 
+
+
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 
+        String robName = getRobName();
         for(BluetoothDevice btDev : pairedDevices) {
-            if (btDev.getName().equals(ROB_NAME)) {
+            if (btDev.getName().equals(robName)) {
                 return btDev;
             }
         }
 
         return null;
+
+    }
+
+
+    private String getRobName() {
+
+        String robName = this.options.getString(ROBOBO_BT_NAME_OPTION);
+
+        if (robName == null) {
+            robName = ROB_NAME;
+        }
+
+        return robName;
 
     }
 
