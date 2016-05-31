@@ -44,7 +44,7 @@ import java.util.Set;
 public class RoboboDeviceSelectionDialog extends DialogFragment {
 
 
-    private ArrayList<Listener> listeners = new ArrayList<>(1);
+    private Listener listener;
 
 
     @Override
@@ -53,25 +53,45 @@ public class RoboboDeviceSelectionDialog extends DialogFragment {
         //get the names of the devices paired
         final String[] roboboNames = getBtPairedDevicesNames();
 
-        //show the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.bluetooth_dialog_title))
-                .setItems(roboboNames, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
 
-                        //notify the selection to the listeners
-                        notifyRoboboName(roboboNames[which]);
+        if (roboboNames.length == 0) {
 
-                    }
-                });
+            //show error dialog
+            builder.setTitle(getString(R.string.bluetooth_dialog_title))
+                    .setMessage("No device found or bluetooth disabled.")
+                    .setNegativeButton(getText(R.string.ok_msg), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            listener.bluetoothIsDisabled();
+                        }
+            }).setCancelable(false);
+
+        }
+        else {
+
+            //show selection the dialog
+            builder.setTitle(getString(R.string.bluetooth_dialog_title))
+                    .setItems(roboboNames, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            //notify the selection to the listeners
+                            if (listener != null) listener.roboboSelected(roboboNames[which]);
+
+                        }
+                    });
+
+        }
+
         return builder.create();
+
     }
 
 
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-        notifySelectionCacelled();
+        if (listener != null) listener.selectionCancelled();
     }
 
     /** Returns an array with the names of all the bluetooth devices paired with this smartphone
@@ -81,42 +101,35 @@ public class RoboboDeviceSelectionDialog extends DialogFragment {
     public String[] getBtPairedDevicesNames() {
 
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-
-        String[] devicesNames = new String[pairedDevices.size()];
-        int i=0;
-        for(BluetoothDevice btDev : pairedDevices) {
-            devicesNames[i] = btDev.getName();
-            i++;
+        if (!mBluetoothAdapter.isEnabled()) {
+            //bluetooth disabled
+            return new String[0];
         }
+        else {
+            //bluetooth enabled
+            Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 
-        return devicesNames;
+            String[] devicesNames = new String[pairedDevices.size()];
+            int i = 0;
+            for (BluetoothDevice btDev : pairedDevices) {
+                devicesNames[i] = btDev.getName();
+                i++;
+            }
+
+            return devicesNames;
+        }
 
     }
 
 
-    public void addListener(Listener listener) {
-        this.listeners.add(listener);
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 
     public void removeListener(Listener listener) {
-        this.listeners.remove(listener);
+        this.listener = null;
     }
 
-
-    public void notifyRoboboName(String roboboName) {
-        Iterator<Listener> listenerIter = this.listeners.iterator();
-        while(listenerIter.hasNext()) {
-            listenerIter.next().roboboSelected(roboboName);
-        }
-    }
-
-    public void notifySelectionCacelled() {
-        Iterator<Listener> listenerIter = this.listeners.iterator();
-        while(listenerIter.hasNext()) {
-            listenerIter.next().selectionCancelled();
-        }
-    }
 
 
     /** Receives notifications of the selection of a Robobo bluetooth device
@@ -131,6 +144,9 @@ public class RoboboDeviceSelectionDialog extends DialogFragment {
          * @param roboboName the name of the Robobo device selected by the user
          */
         public void roboboSelected(String roboboName);
+
+
+        public void bluetoothIsDisabled();
 
 
         public void selectionCancelled();

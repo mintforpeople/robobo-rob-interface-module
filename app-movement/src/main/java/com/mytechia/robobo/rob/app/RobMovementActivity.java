@@ -123,12 +123,6 @@ public class RobMovementActivity extends Activity {
 
         setContentView(R.layout.activity_rob_movement);
 
-        //wait to dialog shown during the startup of the framework and the bluetooth connection
-        this.waitDialog = ProgressDialog.show(this,
-                getString(R.string.dialogWaitConnectionTitle),
-                getString(R.string.dialogWaitConnectionMsg), true);
-
-
         //buttons for movement control
         this.btnForwards = (ImageButton) findViewById(R.id.btnForward);
         this.btnBackwards = (ImageButton) findViewById(R.id.btnBarckward);
@@ -187,7 +181,7 @@ public class RobMovementActivity extends Activity {
     private void showRoboboDeviceSelectionDialog() {
 
         RoboboDeviceSelectionDialog dialog = new RoboboDeviceSelectionDialog();
-        dialog.addListener(new RoboboDeviceSelectionDialog.Listener() {
+        dialog.setListener(new RoboboDeviceSelectionDialog.Listener() {
             @Override
             public void roboboSelected(String roboboName) {
 
@@ -210,6 +204,12 @@ public class RobMovementActivity extends Activity {
             public void selectionCancelled() {
                 showErrorDialog("No device selected.");
             }
+
+            @Override
+            public void bluetoothIsDisabled() {
+                finish();
+            }
+
         });
         dialog.show(getFragmentManager(),"BLUETOOTH-DIALOG");
 
@@ -217,6 +217,11 @@ public class RobMovementActivity extends Activity {
 
 
     private void launchAndConnectRoboboService(String roboboBluetoothName) {
+
+        //wait to dialog shown during the startup of the framework and the bluetooth connection
+        this.waitDialog = ProgressDialog.show(this,
+                getString(R.string.dialogWaitConnectionTitle),
+                getString(R.string.dialogWaitConnectionMsg), true);
 
         //we use the RoboboServiceHelper class to manage the startup and binding
         //of the Robobo Manager service and Robobo modules
