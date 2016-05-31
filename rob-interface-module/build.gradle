@@ -21,7 +21,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.mytechia:robobo-rob-interface:0.1.8-SNAPSHOT'
+    compile 'com.mytechia:robobo-rob-interface:0.1.9-SNAPSHOT'
     compile project(':simplemessageprotocol')
-    compile 'com.mytechia:robobo-framework:0.3.3'
+    compile 'com.mytechia:robobo-framework:0.3.4'
 }
