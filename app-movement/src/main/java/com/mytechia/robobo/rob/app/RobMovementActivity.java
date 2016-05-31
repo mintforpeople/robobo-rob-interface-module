@@ -27,6 +27,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +53,7 @@ import com.mytechia.robobo.rob.LEDsModeEnum;
 import com.mytechia.robobo.rob.MotorStatus;
 import com.mytechia.robobo.rob.WallConnectionStatus;
 import com.mytechia.robobo.rob.movement.IRobMovementModule;
+import com.mytechia.robobo.rob.util.RoboboDeviceSelectionDialog;
 
 import java.util.Collection;
 import java.util.Date;
@@ -118,6 +120,7 @@ public class RobMovementActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_rob_movement);
 
         //wait to dialog shown during the startup of the framework and the bluetooth connection
@@ -170,6 +173,50 @@ public class RobMovementActivity extends Activity {
         //last time where an status update was received
         this.txtLastStatus = (TextView) findViewById(R.id.txtLastStatus);
 
+        //show the device selection dialog and wait until the user selects a device
+        showRoboboDeviceSelectionDialog();
+
+    }
+
+
+    /** Shows a Robobo device selection dialog, suscribes to device selection
+     * events to "wait" until the user selects a device, and then starts
+     * the Robobo Framework using the RoboboHelper inside an AsyncTask to
+     * not freeze the UI code.
+     */
+    private void showRoboboDeviceSelectionDialog() {
+
+        RoboboDeviceSelectionDialog dialog = new RoboboDeviceSelectionDialog();
+        dialog.addListener(new RoboboDeviceSelectionDialog.Listener() {
+            @Override
+            public void roboboSelected(String roboboName) {
+
+                final String roboboBluetoothName = roboboName;
+
+                //start the framework in background
+                AsyncTask<Void, Void, Void> launchRoboboService =
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                launchAndConnectRoboboService(roboboBluetoothName);
+                                return null;
+                            }
+                        };
+                launchRoboboService.execute();
+
+            }
+
+            @Override
+            public void selectionCancelled() {
+                showErrorDialog("No device selected.");
+            }
+        });
+        dialog.show(getFragmentManager(),"BLUETOOTH-DIALOG");
+
+    }
+
+
+    private void launchAndConnectRoboboService(String roboboBluetoothName) {
 
         //we use the RoboboServiceHelper class to manage the startup and binding
         //of the Robobo Manager service and Robobo modules
@@ -212,9 +259,8 @@ public class RobMovementActivity extends Activity {
 
         //start & bind the Robobo service
         Bundle options = new Bundle();
-        options.putString(BluetoothRobInterfaceModule.ROBOBO_BT_NAME_OPTION, "HC-06");
+        options.putString(BluetoothRobInterfaceModule.ROBOBO_BT_NAME_OPTION, roboboBluetoothName);
         roboboHelper.bindRoboboService(options);
-
 
     }
 
@@ -225,7 +271,9 @@ public class RobMovementActivity extends Activity {
         super.onDestroy();
 
         //we unbind and (maybe) stop the Robobo service on exit
-        roboboHelper.unbindRoboboService();
+        if (roboboHelper != null) {
+            roboboHelper.unbindRoboboService();
+        }
 
     }
 
@@ -756,9 +804,9 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
-                System.exit(0);
             }
-        });
+        })
+        .setCancelable(false);
 
         AlertDialog dialog = builder.create();
         dialog.show();
