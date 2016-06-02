@@ -462,10 +462,9 @@ public class RobMovementActivity extends Activity {
         this.btnBackwards.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int time = 100000;
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        robMovement.moveBackwardsTime(getAngVel(), time);
+                        robMovement.moveBackwardsTime(getAngVel(), Integer.MAX_VALUE);
                         break;
                     case MotionEvent.ACTION_UP:
                         robMovement.stop();
