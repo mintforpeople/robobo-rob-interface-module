@@ -60,31 +60,31 @@ public class DefaultRobMovementModule implements IRobMovementModule {
 
 
     @Override
-    public void moveForwardsTime(short velocity, long time) {
+    public void moveForwardsTime(short velocity, long time) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Move forwards: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)velocity, (byte)velocity, time);
     }
 
     @Override
-    public void moveForwardsAngle(short velocity, int angle) {
+    public void moveForwardsAngle(short velocity, int angle) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Move forwards: %d - %d", velocity, angle));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)velocity, angle, (byte)velocity, angle);
     }
 
     @Override
-    public void moveBackwardsTime(short velocity, long time) {
+    public void moveBackwardsTime(short velocity, long time) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Move backwards: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.REVERSE_REVERSE, (byte)velocity, (byte)velocity, time);
     }
 
     @Override
-    public void moveBackwardsAngle(short velocity, int angle) {
+    public void moveBackwardsAngle(short velocity, int angle) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Move backwards: %d - %d", velocity, angle));
         this.rob.moveMT(MoveMTMode.REVERSE_REVERSE, (byte)velocity, angle, (byte)velocity, angle);
     }
 
     @Override
-    public void stop() {
+    public void stop() throws InternalErrorException {
         Log.d("ROB-INTERFACE", "Stop.");
         this.rob.moveMT(MoveMTMode.STOP_STOP, (byte)0, (byte)0, 0);
         this.rob.movePan((short)0, 0);
@@ -92,49 +92,49 @@ public class DefaultRobMovementModule implements IRobMovementModule {
     }
 
     @Override
-    public void turnLeftTime(short velocity, long time) {
+    public void turnLeftTime(short velocity, long time) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Turn left: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)0, (byte)velocity, time);
     }
 
     @Override
-    public void turnLeftAngle(short velocity, int angle) {
+    public void turnLeftAngle(short velocity, int angle) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Turn left: %d - %d", velocity, angle));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (short) 0, 0, velocity, angle);
     }
 
     @Override
-    public void turnLeftBackwardsTime(short velocity, long time) {
+    public void turnLeftBackwardsTime(short velocity, long time) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Turn left backwards: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)0,(byte) velocity, time);
     }
 
     @Override
-    public void turnRightTime(short velocity, long time) {
+    public void turnRightTime(short velocity, long time) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Turn right: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)velocity, (byte)0, time);
     }
 
     @Override
-    public void turnRightAngle(short velocity, int angle) {
+    public void turnRightAngle(short velocity, int angle) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Turn right: %d - %d", velocity, angle));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, velocity, angle, (short) 0, 0);
     }
 
     @Override
-    public void turnRightBackwardsTime(short velocity, long time) {
+    public void turnRightBackwardsTime(short velocity, long time) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Turn right backwards: %d - %d", velocity, time));
         this.rob.moveMT(MoveMTMode.FORWARD_FORWARD, (byte)0, (byte)velocity, time);
     }
 
     @Override
-    public void movePan(int angle) {
+    public void movePan(int angle) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Move pan: %d ", angle));
         this.rob.movePan(MAX_PANTILT_VELOCITY, angle);
     }
 
     @Override
-    public void moveTilt(int angle) {
+    public void moveTilt(int angle) throws InternalErrorException {
         Log.d("ROB-INTERFACE", String.format("Move tilt: %d ", angle));
         this.rob.moveTilt(MAX_PANTILT_VELOCITY, angle);
     }

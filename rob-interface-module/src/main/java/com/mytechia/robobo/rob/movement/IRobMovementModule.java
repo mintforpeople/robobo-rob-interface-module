@@ -23,6 +23,7 @@
 
 package com.mytechia.robobo.rob.movement;
 
+import com.mytechia.commons.framework.exception.InternalErrorException;
 import com.mytechia.robobo.framework.IModule;
 
 /**
@@ -33,27 +34,27 @@ import com.mytechia.robobo.framework.IModule;
 public interface IRobMovementModule extends IModule {
 
 
-    public void moveForwardsTime(short velocity, long time);
-    public void moveForwardsAngle(short velocity, int angle);
+    public void moveForwardsTime(short velocity, long time) throws InternalErrorException;
+    public void moveForwardsAngle(short velocity, int angle) throws InternalErrorException;
 
-    public void moveBackwardsTime(short velocity, long time);
-    public void moveBackwardsAngle(short velocity, int angle);
+    public void moveBackwardsTime(short velocity, long time) throws InternalErrorException;
+    public void moveBackwardsAngle(short velocity, int angle) throws InternalErrorException;
 
-    public void stop();
+    public void stop() throws InternalErrorException;
 
-    public void turnLeftTime(short velocity, long time);
-    public void turnLeftAngle(short velocity, int angle);
+    public void turnLeftTime(short velocity, long time) throws InternalErrorException;
+    public void turnLeftAngle(short velocity, int angle) throws InternalErrorException;
 
-    public void turnRightTime(short velocity, long time);
-    public void turnRightAngle(short velocity, int angle);
+    public void turnRightTime(short velocity, long time) throws InternalErrorException;
+    public void turnRightAngle(short velocity, int angle) throws InternalErrorException;
 
-    public void turnLeftBackwardsTime(short velocity, long time);
-    public void turnRightBackwardsTime(short velocity, long time);
+    public void turnLeftBackwardsTime(short velocity, long time) throws InternalErrorException;
+    public void turnRightBackwardsTime(short velocity, long time) throws InternalErrorException;
 
 
-    public void movePan(int angle);
+    public void movePan(int angle) throws InternalErrorException;
 
-    public void moveTilt(int angle);
+    public void moveTilt(int angle) throws InternalErrorException;
 
 
 }

@@ -39,6 +39,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.mytechia.commons.framework.exception.InternalErrorException;
 import com.mytechia.robobo.framework.RoboboManager;
 import com.mytechia.robobo.framework.exception.ModuleNotFoundException;
 import com.mytechia.robobo.framework.service.RoboboServiceHelper;
@@ -64,6 +65,8 @@ import java.util.Date;
  * @author Gervasio Varela
  */
 public class RobMovementActivity extends Activity {
+
+    private static final String TAG="RobMovementActivity";
 
 
     private RoboboServiceHelper roboboHelper;
@@ -394,6 +397,11 @@ public class RobMovementActivity extends Activity {
             }
 
             @Override
+            public void robCommunicationError(InternalErrorException ex) {
+
+            }
+
+            @Override
             public void statusIRSensorStatus(final Collection<IRSensorStatus> irSensorStatus) {
                 Log.d("MOVEMENT", "IRs");
                 runOnUiThread(new Runnable() {
@@ -449,10 +457,20 @@ public class RobMovementActivity extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        robMovement.moveForwardsTime(getAngVel(), Integer.MAX_VALUE);
+                        try {
+                            robMovement.moveForwardsTime(getAngVel(), Integer.MAX_VALUE);
+                        } catch (InternalErrorException e) {
+                            Log.d(TAG, "Error robobo", e);
+                            showErrorDialog(e.getMessage());
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
-                        robMovement.stop();
+                        try {
+                            robMovement.stop();
+                        } catch (InternalErrorException e) {
+                            Log.d(TAG, "Error robobo", e);
+                            showErrorDialog(e.getMessage());
+                        }
                         break;
                 }
                 return true;
@@ -464,10 +482,20 @@ public class RobMovementActivity extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        robMovement.moveBackwardsTime(getAngVel(), Integer.MAX_VALUE);
+                        try {
+                            robMovement.moveBackwardsTime(getAngVel(), Integer.MAX_VALUE);
+                        } catch (InternalErrorException e) {
+                            Log.d(TAG, "Error robobo", e);
+                            showErrorDialog(e.getMessage());
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
-                        robMovement.stop();
+                        try {
+                            robMovement.stop();
+                        } catch (InternalErrorException e) {
+                            Log.d(TAG, "Error robobo", e);
+                            showErrorDialog(e.getMessage());
+                        }
                         break;
                 }
                 return true;
@@ -479,10 +507,20 @@ public class RobMovementActivity extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        robMovement.turnLeftTime(getAngVel(), Integer.MAX_VALUE);
+                        try {
+                            robMovement.turnLeftTime(getAngVel(), Integer.MAX_VALUE);
+                        } catch (InternalErrorException e) {
+                            Log.d(TAG, "Error robobo", e);
+                            showErrorDialog(e.getMessage());
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
-                        robMovement.stop();
+                        try {
+                            robMovement.stop();
+                        } catch (InternalErrorException e) {
+                            Log.d(TAG, "Error robobo", e);
+                            showErrorDialog(e.getMessage());
+                        }
                         break;
                 }
                 return true;
@@ -494,10 +532,20 @@ public class RobMovementActivity extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        robMovement.turnRightTime(getAngVel(), Integer.MAX_VALUE);
+                        try {
+                            robMovement.turnRightTime(getAngVel(), Integer.MAX_VALUE);
+                        } catch (InternalErrorException e) {
+                            Log.d(TAG, "Error robobo", e);
+                            showErrorDialog(e.getMessage());
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
-                        robMovement.stop();
+                        try {
+                            robMovement.stop();
+                        } catch (InternalErrorException e) {
+                            Log.d(TAG, "Error robobo", e);
+                            showErrorDialog(e.getMessage());
+                        }
                         break;
                 }
                 return true;
@@ -564,7 +612,12 @@ public class RobMovementActivity extends Activity {
         this.btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                robMovement.stop();
+                try {
+                    robMovement.stop();
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             }
         });
 
@@ -595,9 +648,19 @@ public class RobMovementActivity extends Activity {
 
         if (!this.tglRCMode.isChecked()) { //if we are in command test mode
             if (useTime) {
-                robMovement.moveForwardsTime(getAngVel(), getTime());
+                try {
+                    robMovement.moveForwardsTime(getAngVel(), getTime());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             } else {
-                robMovement.moveForwardsAngle(getAngVel(), getAngle());
+                try {
+                    robMovement.moveForwardsAngle(getAngVel(), getAngle());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             }
         }
 
@@ -606,9 +669,19 @@ public class RobMovementActivity extends Activity {
     private void moveBackwards() {
         if (!this.tglRCMode.isChecked()) { //if we are in command test mode
             if (useTime) {
-                robMovement.moveBackwardsTime(getAngVel(), getTime());
+                try {
+                    robMovement.moveBackwardsTime(getAngVel(), getTime());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             } else {
-                robMovement.moveBackwardsAngle(getAngVel(), getAngle());
+                try {
+                    robMovement.moveBackwardsAngle(getAngVel(), getAngle());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             }
         }
     }
@@ -616,9 +689,19 @@ public class RobMovementActivity extends Activity {
     private void turnLeft() {
         if (!this.tglRCMode.isChecked()) { //if we are in command test mode
             if (useTime) {
-                robMovement.turnLeftTime(getAngVel(), getTime());
+                try {
+                    robMovement.turnLeftTime(getAngVel(), getTime());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             } else {
-                robMovement.turnLeftAngle(getAngVel(), getAngle());
+                try {
+                    robMovement.turnLeftAngle(getAngVel(), getAngle());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             }
         }
     }
@@ -626,9 +709,19 @@ public class RobMovementActivity extends Activity {
     private void turnRight() {
         if (!this.tglRCMode.isChecked()) { //if we are in command test mode
             if (useTime) {
-                robMovement.turnRightTime(getAngVel(), getTime());
+                try {
+                    robMovement.turnRightTime(getAngVel(), getTime());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             } else {
-                robMovement.turnRightAngle(getAngVel(), getAngle());
+                try {
+                    robMovement.turnRightAngle(getAngVel(), getAngle());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             }
         }
     }
@@ -639,19 +732,34 @@ public class RobMovementActivity extends Activity {
         this.btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rob.resetPanTiltOffset();
+                try {
+                    rob.resetPanTiltOffset();
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             }
         });
 
         //secure/unsecure movement mode
-        this.tglMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        this.tglLeds.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    rob.setLEDsMode(LEDsModeEnum.INFRARED_AND_DETECT_FALL);
+                    try {
+                        rob.setLEDsMode(LEDsModeEnum.INFRARED_AND_DETECT_FALL);
+                    } catch (InternalErrorException e) {
+                        Log.d(TAG, "Error robobo", e);
+                        showErrorDialog(e.getMessage());
+                    }
                 }
                 else {
-                    rob.setLEDsMode(LEDsModeEnum.NONE);
+                    try {
+                        rob.setLEDsMode(LEDsModeEnum.NONE);
+                    } catch (InternalErrorException e) {
+                        Log.d(TAG, "Error robobo", e);
+                        showErrorDialog(e.getMessage());
+                    }
                 }
             }
         });
@@ -661,10 +769,20 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    rob.setOperationMode((byte)0);
+                    try {
+                        rob.setOperationMode((byte)0);
+                    } catch (InternalErrorException e) {
+                        Log.d(TAG, "Error robobo", e);
+                        showErrorDialog(e.getMessage());
+                    }
                 }
                 else {
-                    rob.setOperationMode((byte)1);
+                    try {
+                        rob.setOperationMode((byte)1);
+                    } catch (InternalErrorException e) {
+                        Log.d(TAG, "Error robobo", e);
+                        showErrorDialog(e.getMessage());
+                    }
                 }
             }
         });
@@ -689,7 +807,12 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //CHANGE STATUS PERIOD
-                rob.setRobStatusPeriod(seekBar.getProgress());
+                try {
+                    rob.setRobStatusPeriod(seekBar.getProgress());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             }
         });
 
@@ -762,7 +885,12 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //send a move PAN command
-                robMovement.movePan(seekBar.getProgress());
+                try {
+                    robMovement.movePan(seekBar.getProgress());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             }
         });
 
@@ -779,7 +907,12 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //send a move TILT command
-                robMovement.moveTilt(seekBar.getProgress());
+                try {
+                    robMovement.moveTilt(seekBar.getProgress());
+                } catch (InternalErrorException e) {
+                    Log.d(TAG, "Error robobo", e);
+                    showErrorDialog(e.getMessage());
+                }
             }
         });
 
@@ -967,22 +1100,29 @@ public class RobMovementActivity extends Activity {
      *
      * @param msg the message to be shown in the error dialog
      */
-    protected void showErrorDialog(String msg) {
+    protected void showErrorDialog(final String msg) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(com.mytechia.robobo.framework.R.string.title_error_dialog).
-                setMessage(msg);
-        builder.setPositiveButton(com.mytechia.robobo.framework.R.string.ok_msg, new DialogInterface.OnClickListener() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        })
-        .setCancelable(false);
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(RobMovementActivity.this);
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
+                builder.setTitle(com.mytechia.robobo.framework.R.string.title_error_dialog).
+                        setMessage(msg);
+                builder.setPositiveButton(com.mytechia.robobo.framework.R.string.ok_msg, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                        .setCancelable(false);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+
 
     }
 
