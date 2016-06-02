@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+    android:gravity="center">
 <GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -77,16 +83,6 @@
         android:layout_column="0"
         android:layout_columnSpan="3" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btnResetPanTilt"
-        android:id="@+id/btnResetPanTilt"
-        android:layout_row="4"
-        android:layout_column="0"
-        android:layout_gravity="center_horizontal" />
-
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -104,7 +100,7 @@
         android:layout_height="wrap_content"
         android:text="New ToggleButton"
         android:id="@+id/tglRCMode"
-        android:layout_row="6"
+        android:layout_row="4"
         android:layout_column="0"
         android:layout_gravity="center"
         android:checked="true"
@@ -134,6 +130,16 @@
         android:checked="false"
         android:textOff="@string/tglLedsOn"
         android:textOn="@string/tglLedsOff" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btnResetPanTilt"
+        android:id="@+id/btnResetPanTilt"
+        android:layout_row="6"
+        android:layout_column="0"
+        android:layout_gravity="center_horizontal" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -231,7 +237,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0 0 0 0 0 0 0"
+        android:text="0 0 0 0"
         android:id="@+id/txtGaps"
         android:layout_row="12"
         android:layout_column="1"
@@ -259,7 +265,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0 0 0 0 0 0 0"
+        android:text="0 0 0 0"
         android:id="@+id/txtFalls"
         android:layout_row="13"
         android:layout_column="1"
@@ -299,7 +305,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/txtPan"
         android:layout_row="15"
-        android:layout_column="1" />
+        android:layout_column="1"
+        android:text="--" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -316,7 +323,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/txtTilt"
         android:layout_row="16"
-        android:layout_column="1" />
+        android:layout_column="1"
+        android:text="--" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -333,7 +341,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/txtLeft"
         android:layout_row="17"
-        android:layout_column="1" />
+        android:layout_column="1"
+        android:text="--" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -350,7 +359,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/txtRight"
         android:layout_row="18"
-        android:layout_column="1" />
+        android:layout_column="1"
+        android:text="--" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -365,7 +375,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
+        android:text="--"
         android:id="@+id/txtBattery"
         android:layout_row="19"
         android:layout_column="1" />
@@ -409,3 +419,4 @@
         android:layout_columnSpan="2" />
 
 </GridLayout>
+</RelativeLayout>
