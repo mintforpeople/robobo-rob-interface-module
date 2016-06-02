@@ -30,6 +30,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -77,6 +78,7 @@ public class RobMovementActivity extends Activity {
     private ImageButton btnTurnLeft;
     private ImageButton btnTurnRight;
     private Button btnStop;
+    private ToggleButton tglRCMode;
 
     private TextView lblTime;
     private SeekBar skBarTime;
@@ -129,6 +131,7 @@ public class RobMovementActivity extends Activity {
         this.btnTurnLeft = (ImageButton) findViewById(R.id.btnTurnLeft);
         this.btnTurnRight = (ImageButton) findViewById(R.id.btnTurnRight);
         this.btnStop = (Button) findViewById(R.id.btnStop);
+        this.tglRCMode = (ToggleButton) findViewById(R.id.tglRCMode);
 
         //bars for movement control
         this.lblTime = (TextView) findViewById(R.id.lblTime);
@@ -218,10 +221,16 @@ public class RobMovementActivity extends Activity {
 
     private void launchAndConnectRoboboService(String roboboBluetoothName) {
 
-        //wait to dialog shown during the startup of the framework and the bluetooth connection
-        this.waitDialog = ProgressDialog.show(this,
-                getString(R.string.dialogWaitConnectionTitle),
-                getString(R.string.dialogWaitConnectionMsg), true);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //wait to dialog shown during the startup of the framework and the bluetooth connection
+                waitDialog = ProgressDialog.show(RobMovementActivity.this,
+                        getString(R.string.dialogWaitConnectionTitle),
+                        getString(R.string.dialogWaitConnectionMsg), true);
+            }
+        });
+
 
         //we use the RoboboServiceHelper class to manage the startup and binding
         //of the Robobo Manager service and Robobo modules
@@ -302,7 +311,7 @@ public class RobMovementActivity extends Activity {
 
         //configure the listeners for the different view objects of the GUI
         setMovementBarsListeners();
-        setMovementButtonsListeners();
+        setToggleControMode();
         setPanTiltBarsListeners();
         setStatusPeriodBarListener();
         setButtonBarListeners();
@@ -400,18 +409,130 @@ public class RobMovementActivity extends Activity {
     }
 
 
-    private void setMovementButtonsListeners() {
+    private void setToggleControMode() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tglRCMode.setChecked(true);
+
+                tglRCMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            setRCModeOn();
+                        }
+                        else {
+                            setRCModeOff();
+                        }
+                    }
+                });
+
+                setRCModeOn();
+            }
+        });
+
+    }
+
+
+    private void setRCModeOn() {
+
+        skBarAngle.setEnabled(false);
+        lblAngle.setEnabled(false);
+        skBarTime.setEnabled(false);
+        lblTime.setEnabled(false);
+
+        removeMovementButtonsOnClickListeners();
+
+        this.btnForwards.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        robMovement.moveForwardsTime(getAngVel(), Integer.MAX_VALUE);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        robMovement.stop();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        this.btnBackwards.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int time = 100000;
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        robMovement.moveBackwardsTime(getAngVel(), time);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        robMovement.stop();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        this.btnTurnLeft.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        robMovement.turnLeftTime(getAngVel(), Integer.MAX_VALUE);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        robMovement.stop();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        this.btnTurnRight.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        robMovement.turnRightTime(getAngVel(), Integer.MAX_VALUE);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        robMovement.stop();
+                        break;
+                }
+                return true;
+            }
+        });
+
+    }
+
+    private void removeMovementButtonsOnTouchListeners() {
+
+        this.btnForwards.setOnTouchListener(null);
+
+        this.btnBackwards.setOnTouchListener(null);
+
+        this.btnTurnLeft.setOnTouchListener(null);
+
+        this.btnTurnRight.setOnTouchListener(null);
+
+    }
+
+    private void setRCModeOff() {
+
+        skBarAngle.setEnabled(true);
+        lblAngle.setEnabled(true);
+        skBarTime.setEnabled(true);
+        lblTime.setEnabled(true);
+
+        removeMovementButtonsOnTouchListeners();
 
         //forward button
         this.btnForwards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (useTime) {
-                    robMovement.moveForwardsTime(getAngVel(), getTime());
-                }
-                else {
-                    robMovement.moveForwardsAngle(getAngVel(), getAngle());
-                }
+                moveFordwards();
             }
         });
 
@@ -419,12 +540,7 @@ public class RobMovementActivity extends Activity {
         this.btnBackwards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (useTime) {
-                    robMovement.moveBackwardsTime(getAngVel(), getTime());
-                }
-                else {
-                    robMovement.moveBackwardsAngle(getAngVel(), getAngle());
-                }
+                moveBackwards();
             }
         });
 
@@ -432,25 +548,16 @@ public class RobMovementActivity extends Activity {
         this.btnTurnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (useTime) {
-                    robMovement.turnLeftTime(getAngVel(), getTime());
-                }
-                else {
-                    robMovement.turnLeftAngle(getAngVel(), getAngle());
-                }
+                turnLeft();
             }
         });
+
 
         //turn right button
         this.btnTurnRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (useTime) {
-                    robMovement.turnRightTime(getAngVel(), getTime());
-                }
-                else {
-                    robMovement.turnRightAngle(getAngVel(), getAngle());
-                }
+                turnRight();
             }
         });
 
@@ -464,6 +571,68 @@ public class RobMovementActivity extends Activity {
 
     }
 
+
+    private void removeMovementButtonsOnClickListeners() {
+
+        //forward button
+        this.btnForwards.setOnClickListener(null);
+
+        //backward button
+        this.btnBackwards.setOnClickListener(null);
+
+        //turn left button
+        this.btnTurnLeft.setOnClickListener(null);
+
+        //turn right button
+        this.btnTurnRight.setOnClickListener(null);
+
+        //stop all movement button
+        this.btnStop.setOnClickListener(null);
+
+    }
+
+
+    private void moveFordwards() {
+
+        if (!this.tglRCMode.isChecked()) { //if we are in command test mode
+            if (useTime) {
+                robMovement.moveForwardsTime(getAngVel(), getTime());
+            } else {
+                robMovement.moveForwardsAngle(getAngVel(), getAngle());
+            }
+        }
+
+    }
+
+    private void moveBackwards() {
+        if (!this.tglRCMode.isChecked()) { //if we are in command test mode
+            if (useTime) {
+                robMovement.moveBackwardsTime(getAngVel(), getTime());
+            } else {
+                robMovement.moveBackwardsAngle(getAngVel(), getAngle());
+            }
+        }
+    }
+
+    private void turnLeft() {
+        if (!this.tglRCMode.isChecked()) { //if we are in command test mode
+            if (useTime) {
+                robMovement.turnLeftTime(getAngVel(), getTime());
+            } else {
+                robMovement.turnLeftAngle(getAngVel(), getAngle());
+            }
+        }
+    }
+
+    private void turnRight() {
+        if (!this.tglRCMode.isChecked()) { //if we are in command test mode
+            if (useTime) {
+                robMovement.turnRightTime(getAngVel(), getTime());
+            } else {
+                robMovement.turnRightAngle(getAngVel(), getAngle());
+            }
+        }
+    }
 
     private void setButtonBarListeners() {
 

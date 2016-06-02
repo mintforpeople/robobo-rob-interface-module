@@ -33,4 +33,6 @@
     <string name="dialogWaitConnectionMsg">Please wait...</string>
     <string name="txtBatteryCharging">charging</string>
     <string name="txtBatteryDischarging">discharging</string>
+    <string name="tglRemoteControlModeOn">R/C ON</string>
+    <string name="tglRemoteControlModeOff">R/C OFF</string>
 </resources>
