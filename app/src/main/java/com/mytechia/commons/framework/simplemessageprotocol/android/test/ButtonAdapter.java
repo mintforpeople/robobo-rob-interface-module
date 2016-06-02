@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.mytechia.commons.framework.exception.InternalErrorException;
+import com.mytechia.commons.framework.simplemessageprotocol.exception.CommunicationException;
 import com.mytechia.robobo.rob.DefaultRob;
 import com.mytechia.robobo.rob.LEDsModeEnum;
 import com.mytechia.robobo.rob.MoveMTMode;
@@ -136,7 +138,11 @@ public class ButtonAdapter extends BaseAdapter {
                 int green = 4095;
                 int blue = 0;
 
-                defaultRob.setLEDColor(led, new Color(red, green, blue));
+                try {
+                    defaultRob.setLEDColor(led, new Color(red, green, blue));
+                } catch (InternalErrorException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -147,7 +153,11 @@ public class ButtonAdapter extends BaseAdapter {
 
                 LEDsModeEnum mode = LEDsModeEnum.INFRARED_AND_DETECT_FALL;
 
-                defaultRob.setLEDsMode(mode);
+                try {
+                    defaultRob.setLEDsMode(mode);
+                } catch (InternalErrorException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -162,7 +172,11 @@ public class ButtonAdapter extends BaseAdapter {
                 short angVel2 = 200;
                 int angle2 = 10_000;
 
-                defaultRob.moveMT(MoveMTMode.FORWARD_FORWARD, angVel1, angle1, angVel2, angle2);
+                try {
+                    defaultRob.moveMT(MoveMTMode.FORWARD_FORWARD, angVel1, angle1, angVel2, angle2);
+                } catch (InternalErrorException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -176,7 +190,11 @@ public class ButtonAdapter extends BaseAdapter {
                 short angVel2 = 100;
                 long time=10000;
 
-                defaultRob.moveMT(MoveMTMode.FORWARD_FORWARD, angVel1,  angVel2, time);
+                try {
+                    defaultRob.moveMT(MoveMTMode.FORWARD_FORWARD, angVel1,  angVel2, time);
+                } catch (InternalErrorException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -194,7 +212,11 @@ public class ButtonAdapter extends BaseAdapter {
                 short angVel = 120;
                 short angle = 76;
 
-                defaultRob.movePan(angVel, angle);
+                try {
+                    defaultRob.movePan(angVel, angle);
+                } catch (InternalErrorException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -208,7 +230,11 @@ public class ButtonAdapter extends BaseAdapter {
                 short angVel = 120;
                 short angle = 76;
 
-                defaultRob.moveTilt(angVel, angle);
+                try {
+                    defaultRob.moveTilt(angVel, angle);
+                } catch (InternalErrorException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -221,7 +247,11 @@ public class ButtonAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                defaultRob.resetPanTiltOffset();
+                try {
+                    defaultRob.resetPanTiltOffset();
+                } catch (InternalErrorException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -232,7 +262,11 @@ public class ButtonAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                defaultRob.setRobStatusPeriod(2000);
+                try {
+                    defaultRob.setRobStatusPeriod(2000);
+                } catch (InternalErrorException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -243,7 +277,11 @@ public class ButtonAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                smpRobComm.infraredConfiguration((byte)3, (byte)3, (byte)192, (byte)8);
+                try {
+                    smpRobComm.infraredConfiguration((byte)3, (byte)3, (byte)192, (byte)8);
+                } catch (CommunicationException e) {
+                    e.printStackTrace();
+                }
 
                 try {
                     Thread.sleep(500);
@@ -251,7 +289,11 @@ public class ButtonAdapter extends BaseAdapter {
                     e.printStackTrace();
                 }
 
-                smpRobComm.infraredConfiguration((byte)3, (byte)4, (byte)0, (byte)135);
+                try {
+                    smpRobComm.infraredConfiguration((byte)3, (byte)4, (byte)0, (byte)135);
+                } catch (CommunicationException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -259,7 +301,11 @@ public class ButtonAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                defaultRob.maxValueMotors(12, 12, 13, 13, 15, 15, 16, 16);
+                try {
+                    defaultRob.maxValueMotors(12, 12, 13, 13, 15, 15, 16, 16);
+                } catch (InternalErrorException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -267,7 +313,11 @@ public class ButtonAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                defaultRob.setOperationMode((byte) 1);
+                try {
+                    defaultRob.setOperationMode((byte) 1);
+                } catch (InternalErrorException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
