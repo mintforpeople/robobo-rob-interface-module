@@ -24,13 +24,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile('com.mytechia:simple-message-protocol:2.0.3') {
-        exclude module: 'picocontainer'
-    }
+    compile 'com.mytechia:simple-message-protocol:2.0.3'
     compile 'com.mytechia:robobo-rob-interface:0.2.0'
     compile 'com.mytechia:robobo-framework:0.3.5'
+    compile 'com.mytechia:mytechia-commons-di:1.3.0'
 }
 
 
