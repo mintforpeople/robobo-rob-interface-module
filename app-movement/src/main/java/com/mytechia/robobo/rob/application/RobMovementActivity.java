@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package com.mytechia.robobo.rob.app;
+package com.mytechia.robobo.rob.application;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -126,52 +126,52 @@ public class RobMovementActivity extends Activity {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_rob_movement);
+        setContentView(com.mytechia.robobo.rob.application.R.layout.activity_rob_movement);
 
         //buttons for movement control
-        this.btnForwards = (ImageButton) findViewById(R.id.btnForward);
-        this.btnBackwards = (ImageButton) findViewById(R.id.btnBarckward);
-        this.btnTurnLeft = (ImageButton) findViewById(R.id.btnTurnLeft);
-        this.btnTurnRight = (ImageButton) findViewById(R.id.btnTurnRight);
-        this.btnStop = (Button) findViewById(R.id.btnStop);
-        this.tglRCMode = (ToggleButton) findViewById(R.id.tglRCMode);
+        this.btnForwards = (ImageButton) findViewById(com.mytechia.robobo.rob.application.R.id.btnForward);
+        this.btnBackwards = (ImageButton) findViewById(com.mytechia.robobo.rob.application.R.id.btnBarckward);
+        this.btnTurnLeft = (ImageButton) findViewById(com.mytechia.robobo.rob.application.R.id.btnTurnLeft);
+        this.btnTurnRight = (ImageButton) findViewById(com.mytechia.robobo.rob.application.R.id.btnTurnRight);
+        this.btnStop = (Button) findViewById(com.mytechia.robobo.rob.application.R.id.btnStop);
+        this.tglRCMode = (ToggleButton) findViewById(com.mytechia.robobo.rob.application.R.id.tglRCMode);
 
         //bars for movement control
-        this.lblTime = (TextView) findViewById(R.id.lblTime);
-        this.skBarTime = (SeekBar) findViewById(R.id.skBarTime);
-        this.lblAngVel = (TextView) findViewById(R.id.lblAngVel);
-        this.skBarAngVel = (SeekBar) findViewById(R.id.skBarAngVel);
-        this.lblAngle = (TextView) findViewById(R.id.lblAngle);
-        this.skBarAngle = (SeekBar) findViewById(R.id.skBarAngle);
+        this.lblTime = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.lblTime);
+        this.skBarTime = (SeekBar) findViewById(com.mytechia.robobo.rob.application.R.id.skBarTime);
+        this.lblAngVel = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.lblAngVel);
+        this.skBarAngVel = (SeekBar) findViewById(com.mytechia.robobo.rob.application.R.id.skBarAngVel);
+        this.lblAngle = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.lblAngle);
+        this.skBarAngle = (SeekBar) findViewById(com.mytechia.robobo.rob.application.R.id.skBarAngle);
 
         //bars for pan & tilt
-        this.lblBarPan = (TextView) findViewById(R.id.lblPanBar);
-        this.skBarPan = (SeekBar) findViewById(R.id.skBarPan);
-        this.lblBarTilt = (TextView) findViewById(R.id.lblTiltBar);
-        this.skBarTilt = (SeekBar) findViewById(R.id.skBarTilt);
+        this.lblBarPan = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.lblPanBar);
+        this.skBarPan = (SeekBar) findViewById(com.mytechia.robobo.rob.application.R.id.skBarPan);
+        this.lblBarTilt = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.lblTiltBar);
+        this.skBarTilt = (SeekBar) findViewById(com.mytechia.robobo.rob.application.R.id.skBarTilt);
 
 
         //views for sensors
-        this.txtGaps = (TextView) findViewById(R.id.txtGaps);
-        this.txtFalls = (TextView) findViewById(R.id.txtFalls);
-        this.txtIRs = (TextView) findViewById(R.id.txtIRs);
-        this.txtPan = (TextView) findViewById(R.id.txtPan);
-        this.txtTilt = (TextView) findViewById(R.id.txtTilt);
-        this.txtLeft = (TextView) findViewById(R.id.txtLeft);
-        this.txtRight = (TextView) findViewById(R.id.txtRight);
-        this.txtBattery = (TextView) findViewById(R.id.txtBattery);
+        this.txtGaps = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.txtGaps);
+        this.txtFalls = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.txtFalls);
+        this.txtIRs = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.txtIRs);
+        this.txtPan = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.txtPan);
+        this.txtTilt = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.txtTilt);
+        this.txtLeft = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.txtLeft);
+        this.txtRight = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.txtRight);
+        this.txtBattery = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.txtBattery);
 
         //bar for the status period
-        this.lblPeriod = (TextView) findViewById(R.id.lblStatusPeriod);
-        this.skBarPeriod = (SeekBar) findViewById(R.id.skBarStatusPeriod);
+        this.lblPeriod = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.lblStatusPeriod);
+        this.skBarPeriod = (SeekBar) findViewById(com.mytechia.robobo.rob.application.R.id.skBarStatusPeriod);
 
         //button bar with some utility buttons
-        this.btnReset = (Button) findViewById(R.id.btnResetPanTilt);
-        this.tglMode = (ToggleButton) findViewById(R.id.tglMode);
-        this.tglLeds = (ToggleButton) findViewById(R.id.tglLeds);
+        this.btnReset = (Button) findViewById(com.mytechia.robobo.rob.application.R.id.btnResetPanTilt);
+        this.tglMode = (ToggleButton) findViewById(com.mytechia.robobo.rob.application.R.id.tglMode);
+        this.tglLeds = (ToggleButton) findViewById(com.mytechia.robobo.rob.application.R.id.tglLeds);
 
         //last time where an status update was received
-        this.txtLastStatus = (TextView) findViewById(R.id.txtLastStatus);
+        this.txtLastStatus = (TextView) findViewById(com.mytechia.robobo.rob.application.R.id.txtLastStatus);
 
         //show the device selection dialog and wait until the user selects a device
         showRoboboDeviceSelectionDialog();
@@ -229,8 +229,8 @@ public class RobMovementActivity extends Activity {
             public void run() {
                 //wait to dialog shown during the startup of the framework and the bluetooth connection
                 waitDialog = ProgressDialog.show(RobMovementActivity.this,
-                        getString(R.string.dialogWaitConnectionTitle),
-                        getString(R.string.dialogWaitConnectionMsg), true);
+                        getString(com.mytechia.robobo.rob.application.R.string.dialogWaitConnectionTitle),
+                        getString(com.mytechia.robobo.rob.application.R.string.dialogWaitConnectionMsg), true);
             }
         });
 
@@ -798,7 +798,7 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //update label value
-                setLblValue(lblPeriod, R.string.lblStatusPeriod, progress);
+                setLblValue(lblPeriod, com.mytechia.robobo.rob.application.R.string.lblStatusPeriod, progress);
             }
 
             @Override
@@ -826,7 +826,7 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //the angular velocity bar has been changed, update the value in the label
-                setLblValue(lblAngVel, R.string.lblAngVel, progress);
+                setLblValue(lblAngVel, com.mytechia.robobo.rob.application.R.string.lblAngVel, progress);
             }
 
             @Override
@@ -841,7 +841,7 @@ public class RobMovementActivity extends Activity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //the time bar has been changed, set the mode to USE TIME and update the value in the label
                 useTime();
-                setLblValue(lblTime, R.string.lblTime, progress);
+                setLblValue(lblTime, com.mytechia.robobo.rob.application.R.string.lblTime, progress);
             }
 
             @Override
@@ -856,7 +856,7 @@ public class RobMovementActivity extends Activity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //the angle bar has been changed, set the mode to USE ANGLE and update the value in the label
                 useAngle();
-                setLblValue(lblAngle, R.string.lblAngle, progress);
+                setLblValue(lblAngle, com.mytechia.robobo.rob.application.R.string.lblAngle, progress);
             }
 
             @Override
@@ -876,7 +876,7 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //update label value
-                setLblValue(lblBarPan, R.string.lblPanBar, progress);
+                setLblValue(lblBarPan, com.mytechia.robobo.rob.application.R.string.lblPanBar, progress);
             }
 
             @Override
@@ -898,7 +898,7 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //update label value
-                setLblValue(lblBarTilt, R.string.lblTiltBar, progress);
+                setLblValue(lblBarTilt, com.mytechia.robobo.rob.application.R.string.lblTiltBar, progress);
             }
 
             @Override
@@ -966,10 +966,10 @@ public class RobMovementActivity extends Activity {
 
     private String getWallConnectionStatus() {
         if (this.wallConnectionStatus.getWallConnetion() == (byte)1) {
-            return getString(R.string.txtBatteryCharging);
+            return getString(com.mytechia.robobo.rob.application.R.string.txtBatteryCharging);
         }
         else {
-            return getString(R.string.txtBatteryDischarging);
+            return getString(com.mytechia.robobo.rob.application.R.string.txtBatteryDischarging);
         }
     }
 

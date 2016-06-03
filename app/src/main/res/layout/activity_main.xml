@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.mytechia.commons.framework.simplemessageprotocol.android.test.MainActivity">
+    tools:context="com.mytechia.robobo.rob.activity.bluetooth.android.test.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

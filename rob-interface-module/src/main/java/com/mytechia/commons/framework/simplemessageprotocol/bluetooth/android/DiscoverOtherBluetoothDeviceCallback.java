@@ -21,22 +21,18 @@
  *
  ******************************************************************************/
 
-package com.mytechia.commons.framework.simplemessageprotocol.android;
+package com.mytechia.commons.framework.simplemessageprotocol.bluetooth.android;
+
+import android.bluetooth.BluetoothDevice;
 
 /**
  * @author Julio Gómez
  */
-public class BluetoothNotSupported extends RuntimeException{
+public interface DiscoverOtherBluetoothDeviceCallback {
 
-    public BluetoothNotSupported(Throwable throwable) {
-        super(throwable);
-    }
+    void startDiscovering();
 
-    public BluetoothNotSupported(String detailMessage, Throwable throwable) {
-        super(detailMessage, throwable);
-    }
+    void discovered(BluetoothDevice bluetoothDevice);
 
-    public BluetoothNotSupported(String detailMessage) {
-        super(detailMessage);
-    }
+    void endDiscovering();
 }

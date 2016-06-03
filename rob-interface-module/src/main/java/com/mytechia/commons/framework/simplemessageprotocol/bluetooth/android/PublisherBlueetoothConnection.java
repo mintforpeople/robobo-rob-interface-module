@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package com.mytechia.commons.framework.simplemessageprotocol.android;
+package com.mytechia.commons.framework.simplemessageprotocol.bluetooth.android;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;

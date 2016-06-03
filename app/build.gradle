@@ -5,9 +5,9 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.mytechia.commons.framework.simplemessageprotocol.android.blueetoth"
+        applicationId "com.mytechia.robobo.rob.activity.bluetooth.android.blueetoth"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }

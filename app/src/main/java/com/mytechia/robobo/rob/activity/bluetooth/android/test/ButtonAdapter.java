@@ -1,4 +1,4 @@
-package com.mytechia.commons.framework.simplemessageprotocol.android.test;
+package com.mytechia.robobo.rob.activity.bluetooth.android.test;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.mytechia.commons.framework.exception.InternalErrorException;
 import com.mytechia.commons.framework.simplemessageprotocol.exception.CommunicationException;
@@ -17,7 +16,6 @@ import com.mytechia.robobo.rob.comm.SmpRobComm;
 import com.mytechia.robobo.util.Color;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

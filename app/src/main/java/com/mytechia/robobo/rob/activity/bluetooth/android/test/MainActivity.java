@@ -1,4 +1,4 @@
-package com.mytechia.commons.framework.simplemessageprotocol.android.test;
+package com.mytechia.robobo.rob.activity.bluetooth.android.test;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.mytechia.commons.framework.simplemessageprotocol.android.AndroidBluetoothSPPChannel;
+import com.mytechia.robobo.rob.activity.bluetooth.android.AndroidBluetoothSPPChannel;
 import com.mytechia.robobo.rob.DefaultRob;
 import com.mytechia.robobo.rob.comm.RoboCommandFactory;
 import com.mytechia.robobo.rob.comm.SmpRobComm;

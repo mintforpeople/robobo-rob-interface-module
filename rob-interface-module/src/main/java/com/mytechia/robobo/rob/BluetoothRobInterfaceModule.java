@@ -30,7 +30,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.mytechia.commons.framework.exception.InternalErrorException;
-import com.mytechia.commons.framework.simplemessageprotocol.android.AndroidBluetoothSPPChannel;
+import com.mytechia.commons.framework.simplemessageprotocol.bluetooth.android.AndroidBluetoothSPPChannel;
 import com.mytechia.robobo.framework.RoboboManager;
 import com.mytechia.robobo.rob.comm.RoboCommandFactory;
 import com.mytechia.robobo.rob.comm.SmpRobComm;

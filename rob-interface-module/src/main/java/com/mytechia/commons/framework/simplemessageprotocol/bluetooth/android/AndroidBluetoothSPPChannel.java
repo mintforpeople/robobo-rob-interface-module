@@ -21,11 +21,10 @@
  *
  ******************************************************************************/
 
-package com.mytechia.commons.framework.simplemessageprotocol.android;
+package com.mytechia.commons.framework.simplemessageprotocol.bluetooth.android;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.mytechia.commons.framework.simplemessageprotocol.Command;
@@ -34,15 +33,12 @@ import com.mytechia.commons.framework.simplemessageprotocol.channel.IBasicCommun
 import com.mytechia.commons.framework.simplemessageprotocol.exception.CommunicationException;
 import com.mytechia.commons.framework.simplemessageprotocol.exception.MessageFormatException;
 import com.mytechia.commons.framework.simplemessageprotocol.exception.TimeoutException;
-import com.mytechia.commons.util.collections.bytequeue.ArrayByteQueue;
-import com.mytechia.commons.util.collections.bytequeue.exception.FullByteQueueException;
 
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;

@@ -1,4 +1,4 @@
-package com.mytechia.commons.framework.simplemessageprotocol.android.test;
+package com.mytechia.robobo.rob.activity.bluetooth.android.test;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -8,17 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 
-import com.mytechia.robobo.rob.comm.RoboCommand;
 
 import java.util.List;
 
 /**
  * Created by julio on 1/10/15.
  */
-public class RoboCommandsListAdapter extends ArrayAdapter<RoboCommand> {
+public class BluetoothListAdapter extends ArrayAdapter<BluetoothDevice> {
 
 
-    public RoboCommandsListAdapter(Context context, int resource, List<RoboCommand> bluetoothDeviceList) {
+    public BluetoothListAdapter(Context context, int resource, List<BluetoothDevice> bluetoothDeviceList) {
         super(context, resource,  bluetoothDeviceList);
     }
 
@@ -35,12 +34,12 @@ public class RoboCommandsListAdapter extends ArrayAdapter<RoboCommand> {
 
         CheckedTextView checkedTextView= (CheckedTextView) rowViewGroup.findViewById(R.id.checkedBluetoothDevice);
 
-        RoboCommand roboCommand=super.getItem(position);
+        BluetoothDevice bluetoothDevice=super.getItem(position);
 
-        checkedTextView.setText(roboCommand.getClass().getName());
+
+        checkedTextView.setText(bluetoothDevice.getName() + " " + bluetoothDevice.getAddress());
 
 
         return rowView;
     }
-
 }

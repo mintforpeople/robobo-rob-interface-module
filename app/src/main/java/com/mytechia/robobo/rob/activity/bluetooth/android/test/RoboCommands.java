@@ -1,4 +1,4 @@
-package com.mytechia.commons.framework.simplemessageprotocol.android.test;
+package com.mytechia.robobo.rob.activity.bluetooth.android.test;
 
 import java.util.ArrayList;
 import java.util.List;
