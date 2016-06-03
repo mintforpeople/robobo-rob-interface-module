@@ -28,8 +28,6 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile('com.mytechia:simple-message-protocol:2.0.3') {
-        exclude module: 'picocontainer'
-    }
+    compile('com.mytechia:simple-message-protocol:2.0.3')
     compile 'com.android.support:appcompat-v7:23.2.1'
 }
