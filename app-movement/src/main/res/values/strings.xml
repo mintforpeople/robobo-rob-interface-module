@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_robo_movement">Robobo-ROB</string>
+    <string name="app_robo_movement">Robobo ROB</string>
     <string name="btnForward">Forwards</string>
     <string name="btnBackward">Backwards</string>
     <string name="btnTurnLeft">Turn Left</string>
