@@ -87,8 +87,6 @@ public class DefaultRobMovementModule implements IRobMovementModule {
     public void stop() throws InternalErrorException {
         Log.d("ROB-INTERFACE", "Stop.");
         this.rob.moveMT(MoveMTMode.STOP_STOP, (byte)0, (byte)0, 0);
-        this.rob.movePan((short)0, 0);
-        this.rob.moveTilt((short)0, 0);
     }
 
     @Override
