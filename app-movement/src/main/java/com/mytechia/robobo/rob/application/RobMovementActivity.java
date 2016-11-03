@@ -833,7 +833,12 @@ public class RobMovementActivity extends Activity {
             public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (seekBar.getProgress() < 10) {
+                    setLblValue(lblAngVel, com.mytechia.robobo.rob.application.R.string.lblAngVel, 10);
+                    seekBar.setProgress(10);
+                }
+            }
         });
 
         this.skBarTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -885,8 +890,10 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //send a move PAN command
+                int panAngle = seekBar.getProgress();
                 try {
-                    robMovement.movePan(seekBar.getProgress());
+                    if (panAngle < 25) panAngle = 25;
+                    robMovement.movePan((short) 7, panAngle);
                 } catch (InternalErrorException e) {
                     Log.d(TAG, "Error robobo", e);
                     showErrorDialog(e.getMessage());
@@ -907,8 +914,10 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //send a move TILT command
+                int tiltAngle = seekBar.getProgress();
                 try {
-                    robMovement.moveTilt(seekBar.getProgress());
+                    if (tiltAngle < 25) tiltAngle = 25;
+                    robMovement.moveTilt((short)7, tiltAngle);
                 } catch (InternalErrorException e) {
                     Log.d(TAG, "Error robobo", e);
                     showErrorDialog(e.getMessage());

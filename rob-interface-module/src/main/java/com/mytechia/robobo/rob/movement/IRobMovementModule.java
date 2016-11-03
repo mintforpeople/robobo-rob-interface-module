@@ -52,9 +52,9 @@ public interface IRobMovementModule extends IModule {
     public void turnRightBackwardsTime(short velocity, long time) throws InternalErrorException;
 
 
-    public void movePan(int angle) throws InternalErrorException;
+    public void movePan(short velocity, int angle) throws InternalErrorException;
 
-    public void moveTilt(int angle) throws InternalErrorException;
+    public void moveTilt(short velocity, int angle) throws InternalErrorException;
 
 
 }

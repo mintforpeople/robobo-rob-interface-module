@@ -8,8 +8,8 @@ android {
         applicationId "com.mytechia.robobo.rob.application"
         minSdkVersion 21
         targetSdkVersion 21
-        versionCode 16
-        versionName "0.9.6"
+        versionCode 17
+        versionName "0.9.7"
     }
     buildTypes {
         release {
