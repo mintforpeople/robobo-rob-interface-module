@@ -34,27 +34,27 @@ import com.mytechia.robobo.framework.IModule;
 public interface IRobMovementModule extends IModule {
 
 
-    public void moveForwardsTime(short velocity, long time) throws InternalErrorException;
-    public void moveForwardsAngle(short velocity, int angle) throws InternalErrorException;
+    public void moveForwardsTime(int velocity, long time) throws InternalErrorException;
+    public void moveForwardsAngle(int velocity, int angle) throws InternalErrorException;
 
-    public void moveBackwardsTime(short velocity, long time) throws InternalErrorException;
-    public void moveBackwardsAngle(short velocity, int angle) throws InternalErrorException;
+    public void moveBackwardsTime(int velocity, long time) throws InternalErrorException;
+    public void moveBackwardsAngle(int velocity, int angle) throws InternalErrorException;
 
     public void stop() throws InternalErrorException;
 
-    public void turnLeftTime(short velocity, long time) throws InternalErrorException;
-    public void turnLeftAngle(short velocity, int angle) throws InternalErrorException;
+    public void turnLeftTime(int velocity, long time) throws InternalErrorException;
+    public void turnLeftAngle(int velocity, int angle) throws InternalErrorException;
 
-    public void turnRightTime(short velocity, long time) throws InternalErrorException;
-    public void turnRightAngle(short velocity, int angle) throws InternalErrorException;
+    public void turnRightTime(int velocity, long time) throws InternalErrorException;
+    public void turnRightAngle(int velocity, int angle) throws InternalErrorException;
 
-    public void turnLeftBackwardsTime(short velocity, long time) throws InternalErrorException;
-    public void turnRightBackwardsTime(short velocity, long time) throws InternalErrorException;
+    public void turnLeftBackwardsTime(int velocity, long time) throws InternalErrorException;
+    public void turnRightBackwardsTime(int velocity, long time) throws InternalErrorException;
 
 
-    public void movePan(short velocity, int angle) throws InternalErrorException;
+    public void movePan(int velocity, int angle) throws InternalErrorException;
 
-    public void moveTilt(short velocity, int angle) throws InternalErrorException;
+    public void moveTilt(int velocity, int angle) throws InternalErrorException;
 
 
 }

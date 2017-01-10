@@ -330,10 +330,12 @@ public class RobMovementActivity extends Activity {
      */
     private void setRobStatusListener() {
 
+
+
         this.rob.addRobStatusListener(new IRobStatusListener() {
             @Override
             public void statusMotorsMT(MotorStatus motorStatus, MotorStatus motorStatus1) {
-                Log.d("MOVEMENT", "Motor MT "+motorStatus+" - "+motorStatus1);
+                //Log.d("MOVEMENT", "Motor MT "+motorStatus+" - "+motorStatus1);
                 setMotor(txtLeft, motorStatus);
                 setMotor(txtRight, motorStatus1);
                 updateLastStatus();
@@ -341,7 +343,7 @@ public class RobMovementActivity extends Activity {
 
             @Override
             public void statusMotorPan(MotorStatus motorStatus) {
-                Log.d("MOVEMENT", "Motor Pan");
+                //Log.d("MOVEMENT", "Motor Pan");
                 setMotor(txtPan, motorStatus);
                 skBarPan.setProgress(motorStatus.getVariationAngle());
                 updateLastStatus();
@@ -349,7 +351,7 @@ public class RobMovementActivity extends Activity {
 
             @Override
             public void statusMotorTilt(MotorStatus motorStatus) {
-                Log.d("MOVEMENT", "Motor Tilt");
+                //Log.d("MOVEMENT", "Motor Tilt");
                 setMotor(txtTilt, motorStatus);
                 skBarTilt.setProgress(motorStatus.getVariationAngle());
                 updateLastStatus();
@@ -357,7 +359,7 @@ public class RobMovementActivity extends Activity {
 
             @Override
             public void statusGaps(Collection<GapStatus> gapStatus) {
-                Log.d("MOVEMENT", "Gaps");
+                //Log.d("MOVEMENT", "Gaps");
                 final Collection<GapStatus> gaps = gapStatus;
                 runOnUiThread(new Runnable() {
                     @Override
@@ -370,7 +372,7 @@ public class RobMovementActivity extends Activity {
 
             @Override
             public void statusFalls(Collection<FallStatus> fallStatus) {
-                Log.d("MOVEMENT", "Falls");
+                //Log.d("MOVEMENT", "Falls");
                 final Collection<FallStatus> falls = fallStatus;
                 runOnUiThread(new Runnable() {
                     @Override
@@ -383,7 +385,7 @@ public class RobMovementActivity extends Activity {
 
             @Override
             public void statusBattery(BatteryStatus batteryStatus) {
-                Log.d("MOVEMENT", "Battery");
+                //Log.d("MOVEMENT", "Battery");
                 RobMovementActivity.this.batteryStatus = batteryStatus;
                 updateBattery();
                 updateLastStatus();
@@ -403,7 +405,7 @@ public class RobMovementActivity extends Activity {
 
             @Override
             public void statusIRSensorStatus(final Collection<IRSensorStatus> irSensorStatus) {
-                Log.d("MOVEMENT", "IRs");
+                //Log.d("MOVEMENT", "IRs");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
