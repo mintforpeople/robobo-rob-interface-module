@@ -17,10 +17,10 @@ android {
         }
     }
 
-    lintOptions {
-        disable 'InvalidPackage'
-    }
+}
 
+configurations {
+    all*.exclude group: 'ch.qos.logback', module: 'logback-classic'
 }
 
 dependencies {
