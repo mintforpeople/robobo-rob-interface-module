@@ -19,9 +19,6 @@ android {
 
 }
 
-configurations {
-    all*.exclude group: 'ch.qos.logback', module: 'logback-classic'
-}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
