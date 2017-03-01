@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 21
-        versionCode 7
-        versionName "0.2.6"
+        versionCode 9
+        versionName "0.2.9"
     }
     buildTypes {
         release {
@@ -16,8 +16,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
 
 }
+
 
 
 dependencies {
@@ -31,13 +36,13 @@ dependencies {
 
 
 
-//apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
 
 
-/*afterEvaluate { project ->
+afterEvaluate { project ->
     android.libraryVariants.all { variant ->
         tasks.androidJavadocs.doFirst {
             classpath += files(variant.javaCompile.classpath.files)
         }
     }
-}*/
+}
