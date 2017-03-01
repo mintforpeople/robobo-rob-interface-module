@@ -837,8 +837,8 @@ public class RobMovementActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (seekBar.getProgress() < 10) {
-                    setLblValue(lblAngVel, com.mytechia.robobo.rob.application.R.string.lblAngVel, 10);
-                    seekBar.setProgress(10);
+                    setLblValue(lblAngVel, com.mytechia.robobo.rob.application.R.string.lblAngVel, 0);
+                    seekBar.setProgress(0);
                 }
             }
         });
