@@ -51,30 +51,30 @@ import ch.qos.logback.core.ConsoleAppender;
  */
 public class AndroidBluetoothSPPChannel implements IBasicCommunicationChannel{
 
-    static {
-
-        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-        loggerContext.reset();
-
-
-        Logger root = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-
-
-        PatternLayoutEncoder patternLayout = new PatternLayoutEncoder();
-        patternLayout.setContext(loggerContext);
-        patternLayout.setPattern("%d{dd/MM/yyyy-HH:mm:ss} %-5p: %-20c{1} - %m%n");
-        patternLayout.start();
-
-        ConsoleAppender consoleAppender= new ConsoleAppender();
-        consoleAppender.setName("default-console");
-        consoleAppender.setEncoder(patternLayout);
-        consoleAppender.start();
-
-        root.setLevel(Level.INFO);
-
-        root.addAppender(consoleAppender);
-    }
+//    static {
+//
+//        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+//
+//        loggerContext.reset();
+//
+//
+//        Logger root = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
+//
+//
+//        PatternLayoutEncoder patternLayout = new PatternLayoutEncoder();
+//        patternLayout.setContext(loggerContext);
+//        patternLayout.setPattern("%d{dd/MM/yyyy-HH:mm:ss} %-5p: %-20c{1} - %m%n");
+//        patternLayout.start();
+//
+//        ConsoleAppender consoleAppender= new ConsoleAppender();
+//        consoleAppender.setName("default-console");
+//        consoleAppender.setEncoder(patternLayout);
+//        consoleAppender.start();
+//
+//        root.setLevel(Level.INFO);
+//
+//        root.addAppender(consoleAppender);
+//    }
 
     private static final String TAG_ANDROID_BLUETOOTH_SPPCHANNEL =AndroidBluetoothSPPChannel.class.getName();
 

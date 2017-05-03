@@ -31,6 +31,7 @@ import android.util.Log;
 
 import com.mytechia.commons.framework.exception.InternalErrorException;
 import com.mytechia.commons.framework.simplemessageprotocol.bluetooth.android.AndroidBluetoothSPPChannel;
+import com.mytechia.robobo.framework.LogLvl;
 import com.mytechia.robobo.framework.RoboboManager;
 import com.mytechia.robobo.rob.comm.RoboCommandFactory;
 import com.mytechia.robobo.rob.comm.SmpRobComm;
@@ -69,6 +70,8 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
     private Bundle options;
 
+    private RoboboManager m;
+
 
     /** Returns an instance of the IRob interface for send/receive commands to a Robobo-ROB
      *
@@ -83,6 +86,7 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
     public void startup(RoboboManager manager) throws InternalErrorException {
 
         this.options = manager.getOptions();
+        m = manager;
 
         if(this.actualBluetoothDevice!=null){
 
@@ -98,11 +102,14 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
         }
 
         //look for a Robobo bluetooth device paired with the phone
-        Log.d("ROB-INTERFACE", "Looking for Robobo-ROB devices via bluetooth.");
+
+        m.log("ROB-INTERFACE", "Looking for Robobo-ROB devices via bluetooth.");
         this.actualBluetoothDevice = lookForRoboboDevice();
 
         if (this.actualBluetoothDevice == null) {
+            m.log(LogLvl.ERROR,"ROB-INTERFACE" ,"Unable to find a Robobo-ROB bluetooth device.");
             throw new InternalErrorException("Unable to find a Robobo-ROB bluetooth device.");
+
         }
 
         try {
@@ -132,6 +139,8 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
         }
         catch(IOException e) {
+            m.log(LogLvl.ERROR,"ROB-INTERFACE" ,"Unable to connect to Robobo platform: "+getRobName());
+
             throw new InternalErrorException("Unable to connect to Robobo platform: "+getRobName());
         }
 

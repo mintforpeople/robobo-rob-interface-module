@@ -5,6 +5,9 @@ buildscript {
         mavenLocal()
         mavenCentral()
         jcenter()
+        maven {
+            url "http://bizancio:7080/nexus/content/repositories/snapshots/"
+        }
     }
 
     dependencies {
@@ -20,6 +23,9 @@ allprojects {
         mavenLocal()
         mavenCentral()
         jcenter()
+        maven {
+            url "http://bizancio:7080/nexus/content/repositories/snapshots/"
+        }
     }
 }
 

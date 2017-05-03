@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.mytechia.commons.framework.exception.InternalErrorException;
+import com.mytechia.robobo.framework.LogLvl;
 import com.mytechia.robobo.framework.RoboboManager;
 import com.mytechia.robobo.framework.exception.ModuleNotFoundException;
 import com.mytechia.robobo.framework.service.RoboboServiceHelper;
@@ -322,6 +323,7 @@ public class RobMovementActivity extends Activity {
 
         //configure a listener to receive status data from the Robobo platform
         setRobStatusListener();
+        this.roboboManager.log(this.getClass().getSimpleName(),"Starting robobo app");
 
     }
 
@@ -420,7 +422,6 @@ public class RobMovementActivity extends Activity {
 
 
     private void setToggleControMode() {
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -433,6 +434,7 @@ public class RobMovementActivity extends Activity {
                             setRCModeOn();
                         }
                         else {
+
                             setRCModeOff();
                         }
                     }
@@ -462,7 +464,7 @@ public class RobMovementActivity extends Activity {
                         try {
                             robMovement.moveForwardsTime(getAngVel(), Integer.MAX_VALUE);
                         } catch (InternalErrorException e) {
-                            Log.d(TAG, "Error robobo", e);
+                            roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                             showErrorDialog(e.getMessage());
                         }
                         break;
@@ -470,7 +472,7 @@ public class RobMovementActivity extends Activity {
                         try {
                             robMovement.stop();
                         } catch (InternalErrorException e) {
-                            Log.d(TAG, "Error robobo", e);
+                            roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                             showErrorDialog(e.getMessage());
                         }
                         break;
@@ -487,7 +489,7 @@ public class RobMovementActivity extends Activity {
                         try {
                             robMovement.moveBackwardsTime(getAngVel(), Integer.MAX_VALUE);
                         } catch (InternalErrorException e) {
-                            Log.d(TAG, "Error robobo", e);
+                            roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                             showErrorDialog(e.getMessage());
                         }
                         break;
@@ -495,7 +497,8 @@ public class RobMovementActivity extends Activity {
                         try {
                             robMovement.stop();
                         } catch (InternalErrorException e) {
-                            Log.d(TAG, "Error robobo", e);
+                            roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
+
                             showErrorDialog(e.getMessage());
                         }
                         break;
@@ -512,7 +515,7 @@ public class RobMovementActivity extends Activity {
                         try {
                             robMovement.turnLeftTime(getAngVel(), Integer.MAX_VALUE);
                         } catch (InternalErrorException e) {
-                            Log.d(TAG, "Error robobo", e);
+                            roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                             showErrorDialog(e.getMessage());
                         }
                         break;
@@ -520,7 +523,7 @@ public class RobMovementActivity extends Activity {
                         try {
                             robMovement.stop();
                         } catch (InternalErrorException e) {
-                            Log.d(TAG, "Error robobo", e);
+                            roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                             showErrorDialog(e.getMessage());
                         }
                         break;
@@ -537,7 +540,7 @@ public class RobMovementActivity extends Activity {
                         try {
                             robMovement.turnRightTime(getAngVel(), Integer.MAX_VALUE);
                         } catch (InternalErrorException e) {
-                            Log.d(TAG, "Error robobo", e);
+                            roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                             showErrorDialog(e.getMessage());
                         }
                         break;
@@ -545,7 +548,7 @@ public class RobMovementActivity extends Activity {
                         try {
                             robMovement.stop();
                         } catch (InternalErrorException e) {
-                            Log.d(TAG, "Error robobo", e);
+                            roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                             showErrorDialog(e.getMessage());
                         }
                         break;
@@ -617,7 +620,7 @@ public class RobMovementActivity extends Activity {
                 try {
                     robMovement.stop();
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             }
@@ -653,14 +656,14 @@ public class RobMovementActivity extends Activity {
                 try {
                     robMovement.moveForwardsTime(getAngVel(), getTime());
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             } else {
                 try {
                     robMovement.moveForwardsAngle(getAngVel(), getAngle());
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             }
@@ -674,14 +677,14 @@ public class RobMovementActivity extends Activity {
                 try {
                     robMovement.moveBackwardsTime(getAngVel(), getTime());
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             } else {
                 try {
                     robMovement.moveBackwardsAngle(getAngVel(), getAngle());
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             }
@@ -694,14 +697,14 @@ public class RobMovementActivity extends Activity {
                 try {
                     robMovement.turnLeftTime(getAngVel(), getTime());
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             } else {
                 try {
                     robMovement.turnLeftAngle(getAngVel(), getAngle());
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             }
@@ -714,14 +717,14 @@ public class RobMovementActivity extends Activity {
                 try {
                     robMovement.turnRightTime(getAngVel(), getTime());
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             } else {
                 try {
                     robMovement.turnRightAngle(getAngVel(), getAngle());
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             }
@@ -737,7 +740,7 @@ public class RobMovementActivity extends Activity {
                 try {
                     rob.resetPanTiltOffset();
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             }
@@ -751,7 +754,7 @@ public class RobMovementActivity extends Activity {
                     try {
                         rob.setLEDsMode(LEDsModeEnum.INFRARED_AND_DETECT_FALL);
                     } catch (InternalErrorException e) {
-                        Log.d(TAG, "Error robobo", e);
+                        roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                         showErrorDialog(e.getMessage());
                     }
                 }
@@ -759,7 +762,7 @@ public class RobMovementActivity extends Activity {
                     try {
                         rob.setLEDsMode(LEDsModeEnum.NONE);
                     } catch (InternalErrorException e) {
-                        Log.d(TAG, "Error robobo", e);
+                        roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                         showErrorDialog(e.getMessage());
                     }
                 }
@@ -774,7 +777,7 @@ public class RobMovementActivity extends Activity {
                     try {
                         rob.setOperationMode((byte)0);
                     } catch (InternalErrorException e) {
-                        Log.d(TAG, "Error robobo", e);
+                        roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                         showErrorDialog(e.getMessage());
                     }
                 }
@@ -782,7 +785,7 @@ public class RobMovementActivity extends Activity {
                     try {
                         rob.setOperationMode((byte)1);
                     } catch (InternalErrorException e) {
-                        Log.d(TAG, "Error robobo", e);
+                        roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                         showErrorDialog(e.getMessage());
                     }
                 }
@@ -812,7 +815,7 @@ public class RobMovementActivity extends Activity {
                 try {
                     rob.setRobStatusPeriod(seekBar.getProgress());
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             }
@@ -897,7 +900,7 @@ public class RobMovementActivity extends Activity {
                     if (panAngle < 25) panAngle = 25;
                     robMovement.movePan((short) 7, panAngle);
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             }
@@ -921,7 +924,7 @@ public class RobMovementActivity extends Activity {
                     if (tiltAngle < 25) tiltAngle = 25;
                     robMovement.moveTilt((short)7, tiltAngle);
                 } catch (InternalErrorException e) {
-                    Log.d(TAG, "Error robobo", e);
+                    roboboManager.log(LogLvl.ERROR, TAG, "Error robobo "+e.toString());
                     showErrorDialog(e.getMessage());
                 }
             }
