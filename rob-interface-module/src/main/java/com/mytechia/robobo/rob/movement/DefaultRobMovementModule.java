@@ -140,6 +140,10 @@ public class DefaultRobMovementModule implements IRobMovementModule {
         this.rob.moveTilt(velocity, angle);
     }
 
+    @Override
+    public void movePanTilt(int velocitypan, int anglepan, int velocitytilt, int angletilt) throws InternalErrorException {
+        this.rob.movePanTilt(velocitypan, anglepan, velocitytilt, angletilt);
+    }
 
 
     @Override

@@ -56,5 +56,5 @@ public interface IRobMovementModule extends IModule {
 
     public void moveTilt(int velocity, int angle) throws InternalErrorException;
 
-
+    public void movePanTilt(int velocitypan, int anglepan ,int velocitytilt, int angletilt) throws InternalErrorException;
 }
