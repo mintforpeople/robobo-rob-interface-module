@@ -332,8 +332,7 @@ public class RobMovementActivity extends Activity {
      */
     private void setRobStatusListener() {
 
-
-
+        /*
         this.rob.addRobStatusListener(new IRobStatusListener() {
             @Override
             public void statusMotorsMT(MotorStatus motorStatus, MotorStatus motorStatus1) {
@@ -417,6 +416,7 @@ public class RobMovementActivity extends Activity {
                 updateLastStatus();
             }
         });
+        */
 
     }
 
