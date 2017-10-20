@@ -33,8 +33,6 @@ import android.os.Bundle;
 
 import com.mytechia.robobo.rob.R;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Set;
 
 /** A pop-up dialog that asks the user to select a particular Robobo bluetooth device
