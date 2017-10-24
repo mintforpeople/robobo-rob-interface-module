@@ -73,7 +73,7 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
     private Bundle options;
 
-    private RoboboManager m;
+    private RoboboManager roboboManager;
 
 
     /**
@@ -90,7 +90,7 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
     public void startup(RoboboManager manager) throws NotBoundedBluetoothDevice, ErrorConnectionWithDevice, InternalErrorException {
 
         this.options = manager.getOptions();
-        m = manager;
+        this.roboboManager = manager;
 
         if (this.actualBluetoothDevice != null) {
 
@@ -105,11 +105,11 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
         //look for a Robobo bluetooth device paired with the phone
 
-        m.log("ROB-INTERFACE", "Looking for Robobo-ROB devices via bluetooth.");
+        roboboManager.log("ROB-INTERFACE", "Looking for Robobo-ROB devices via bluetooth.");
         this.actualBluetoothDevice = lookForRoboboDevice();
 
         if (this.actualBluetoothDevice == null) {
-            m.log(LogLvl.ERROR, "ROB-INTERFACE", "Unable to find a Robobo-ROB bluetooth device.");
+            roboboManager.log(LogLvl.ERROR, "ROB-INTERFACE", "Unable to find a Robobo-ROB bluetooth device.");
             throw new NotBoundedBluetoothDevice("Unable to find a Robobo-ROB bluetooth device.", getRobName());
         }
 
@@ -145,6 +145,13 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
 
             this.defaultRob = new DefaultRob(smpRoboCom);
 
+            this.defaultRob.addRobErrorListener(new IRobErrorListener() {
+                @Override
+                public void robError(CommunicationException ex) {
+                    roboboManager.notifyModuleError(ex);
+                }
+            });
+
             this.smpRoboCom.start();
 
         } catch (Exception ex) {
@@ -152,10 +159,10 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
             try {
                 androidBluetoothSPPChannel.close();
             } catch (IOException e) {
-                m.log(LogLvl.ERROR, "ROB-INTERFACE", "Error closing bluetooth channel");
+                roboboManager.log(LogLvl.ERROR, "ROB-INTERFACE", "Error closing bluetooth channel");
             }
 
-            m.log(LogLvl.ERROR, "ROB-INTERFACE", "Error starting DefaultRob");
+            roboboManager.log(LogLvl.ERROR, "ROB-INTERFACE", "Error starting DefaultRob");
 
             throw new ErrorConnectionWithDevice(ex, "Unable to connect to Robobo platform", getRobName());
         }
@@ -164,14 +171,14 @@ public class BluetoothRobInterfaceModule implements IRobInterfaceModule {
         try {
             this.smpRoboCom.setOperationMode((byte) 0);
         } catch (CommunicationException ex) {
-            m.log(LogLvl.ERROR, "ROB-INTERFACE", "Communication error. Error setting operation mode");
+            roboboManager.log(LogLvl.ERROR, "ROB-INTERFACE", "Communication error. Error setting operation mode");
         }
 
         //set the default rob status period to 1 sec
         try {
             this.smpRoboCom.setRobStatusPeriod(1000);
         } catch (CommunicationException ex) {
-            m.log(LogLvl.ERROR, "ROB-INTERFACE", "Communication error. Error setting rob status period");
+            roboboManager.log(LogLvl.ERROR, "ROB-INTERFACE", "Communication error. Error setting rob status period");
         }
 
 

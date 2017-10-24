@@ -252,7 +252,7 @@ public class RobMovementActivity extends Activity {
             }
 
             @Override
-            public void onError(Exception errorMsg) {
+            public void onError(Throwable errorMsg) {
 
                 final String error = errorMsg.getLocalizedMessage();
 
