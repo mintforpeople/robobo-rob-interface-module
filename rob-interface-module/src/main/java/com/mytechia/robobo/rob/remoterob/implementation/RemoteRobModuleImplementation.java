@@ -164,14 +164,14 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
         });
 
 
-        rcmodule.registerCommand("MOVEBYDEGREES", new ICommandExecutor() {
+        rcmodule.registerCommand("MOVEBY-DEGREES", new ICommandExecutor() {
             @Override
             public void executeCommand(Command c, IRemoteControlModule rcmodule) {
                 HashMap<String, String> par = c.getParameters();
                 String wheel = par.get("wheel");
                 int degrees = Math.abs(Integer.parseInt(par.get("degrees")));
                 int speed = Integer.parseInt(par.get("speed"));
-                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVEBYDEGREES Degrees: " + degrees + " Speed: " + speed);
+                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVEBY-DEGREES Degrees: " + degrees + " Speed: " + speed);
 
 
                 if (wheel.equals("right")) {
@@ -209,14 +209,14 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             }
         });
 
-        rcmodule.registerCommand("MOVEBYTIME", new ICommandExecutor() {
+        rcmodule.registerCommand("MOVEBY-TIME", new ICommandExecutor() {
             @Override
             public void executeCommand(Command c, IRemoteControlModule rcmodule) {
                 HashMap<String, String> par = c.getParameters();
                 String wheel = par.get("wheel");
                 int time = Math.round(Float.parseFloat(par.get("time")) * 1000);
                 int speed = Integer.parseInt(par.get("speed"));
-                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVEBYTIME Time: " + time + " Speed: " + speed);
+                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVEBY-TIME Time: " + time + " Speed: " + speed);
 
 
                 if (wheel.equals("right")) {
@@ -271,14 +271,14 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             }
         });
 
-        rcmodule.registerCommand("MOVETWOWHEELS", new ICommandExecutor() {
+        rcmodule.registerCommand("MOVE", new ICommandExecutor() {
             @Override
             public void executeCommand(Command c, IRemoteControlModule rcmodule) {
                 HashMap<String, String> par = c.getParameters();
                 int time = Math.round(Float.parseFloat(par.get("time")) * 1000);
                 int lspeed = Integer.parseInt(par.get("lspeed"));
                 int rspeed = Integer.parseInt(par.get("rspeed"));
-                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVETWOWHEELS Left: " + lspeed + " Right: " + rspeed);
+                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVE Left: " + lspeed + " Right: " + rspeed);
 
 
                 //FF - BIEN
@@ -293,14 +293,14 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             }
         });
 
-        rcmodule.registerCommand("MOTORSON", new ICommandExecutor() {
+        rcmodule.registerCommand("MOVE-FOREVER", new ICommandExecutor() {
             @Override
             public void executeCommand(Command c, IRemoteControlModule rcmodule) {
                 HashMap<String, String> par = c.getParameters();
                 String rmotor = par.get("rmotor");
                 String lmotor = par.get("lmotor");
                 int speed = Integer.parseInt(par.get("speed"));
-                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOTORSON Left: " + lmotor + " Right: " + rmotor);
+                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVE-FOREVER Left: " + lmotor + " Right: " + rmotor);
 
 
                 try {
@@ -350,7 +350,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             }
         });
 
-        rcmodule.registerCommand("MOVEPANBLOCKING", new ICommandExecutor() {
+        rcmodule.registerCommand("MOVEPAN-BLOCKING", new ICommandExecutor() {
             @Override
             public void executeCommand(Command c, IRemoteControlModule rcmodule) {
                 HashMap<String, String> par = c.getParameters();
@@ -376,7 +376,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             }
         });
 
-        rcmodule.registerCommand("MOVETILTBLOCKING", new ICommandExecutor() {
+        rcmodule.registerCommand("MOVETILT-BLOCKING", new ICommandExecutor() {
             @Override
             public void executeCommand(Command c, IRemoteControlModule rcmodule) {
                 HashMap<String, String> par = c.getParameters();
@@ -403,7 +403,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             }
         });
 
-        rcmodule.registerCommand("LEDCOLOR", new ICommandExecutor() {
+        rcmodule.registerCommand("SET-LEDCOLOR", new ICommandExecutor() {
             @Override
             public void executeCommand(Command c, IRemoteControlModule rcmodule) {
                 HashMap<String, String> par = c.getParameters();
@@ -418,7 +418,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                 }
 
                 String colorST = par.get("color");
-                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "LEDCOLOR Color: " + colorST + " led: " + led);
+                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "SET-LEDCOLOR Color: " + colorST + " led: " + led);
 
                 switch (colorST) {
                     case "white":
@@ -472,7 +472,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             }
         });
 
-        rcmodule.registerCommand("TWOWHEELSBLOCKING", new ICommandExecutor() {
+        rcmodule.registerCommand("MOVE-BLOCKING", new ICommandExecutor() {
             @Override
             public void executeCommand(Command c, final IRemoteControlModule rcmodule) {
                 HashMap<String, String> par = c.getParameters();
@@ -492,10 +492,10 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
                     @Override
                     public void run() {
-                        Status s = new Status("UNLOCK");
+                        Status s = new Status("UNLOCK-MOVE");
                         s.putContents("blockid", this.id + "");
                         rcmodule.postStatus(s);
-                        RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "Unlock message");
+                        RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "UNLOCK-MOVE message");
 
                     }
                 }
@@ -504,7 +504,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
                 timer.schedule(ulclass, time - 100);
 
-                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVETWOWHEELSBLOCKING Left: " + lspeed + " Right: " + rspeed);
+                RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVE-BLOCKING Left: " + lspeed + " Right: " + rspeed);
 
                 try {
                     irob.moveMT(rspeed, lspeed, time);
@@ -693,7 +693,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
         @Override
         public void interrupt() {
             terminate = true;
-            Status s = new Status("UNLOCKPAN");
+            Status s = new Status("UNCLOK-PAN");
             s.putContents("blockid", this.blockid + "");
             rcmodule.postStatus(s);
 
@@ -790,7 +790,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
         @Override
         public void interrupt() {
             terminate = true;
-            Status s = new Status("UNLOCKTILT");
+            Status s = new Status("UNLOCK-TILT");
             s.putContents("blockid", this.blockid + "");
             rcmodule.postStatus(s);
             super.interrupt();

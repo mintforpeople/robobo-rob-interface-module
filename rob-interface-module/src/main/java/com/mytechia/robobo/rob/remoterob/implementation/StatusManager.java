@@ -35,7 +35,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-
 public class StatusManager {
 
     private String TAG = "RemoteRob:StatusManager";
@@ -83,7 +82,7 @@ public class StatusManager {
             if ((left.getVariationAngle() != lastWheelPosL)||right.getVariationAngle() != lastWheelPosR) {
                 lastWheelPosL = left.getVariationAngle();
                 lastWheelPosR = right.getVariationAngle();
-                Status s = new Status("WHEELSTATUS");
+                Status s = new Status("WHEELS");
                 s.putContents("wheelPosR", String.valueOf(right.getVariationAngle()));
                 s.putContents("wheelPosL", String.valueOf(left.getVariationAngle()));
                 s.putContents("wheelSpeedR", String.valueOf(right.getAngularVelocity()));
@@ -101,7 +100,7 @@ public class StatusManager {
             this.lastPanStatusTime = System.currentTimeMillis();
             if (status.getVariationAngle() != lastPanPos) {
                 lastPanPos = status.getVariationAngle();
-                Status s = new Status("PANSTATUS");
+                Status s = new Status("PAN");
                 s.putContents("panPos", String.valueOf(status.getVariationAngle()));
                 rcmodule.postStatus(s);
             }
@@ -118,7 +117,7 @@ public class StatusManager {
             this.lastTiltStatusTime = System.currentTimeMillis();
             if (status.getVariationAngle() != lastTiltPos) {
                 lastTiltPos = status.getVariationAngle();
-                Status s = new Status("TILTSTATUS");
+                Status s = new Status("TILT");
                 s.putContents("tiltPos", String.valueOf(status.getVariationAngle()));
                 rcmodule.postStatus(s);
             }
@@ -134,7 +133,7 @@ public class StatusManager {
 
             this.lastBatteryStatusTime = System.currentTimeMillis();
 
-            Status s  = new Status("BATTLEV");
+            Status s  = new Status("BAT-BASE");
             s.putContents("level",String.valueOf(batteryStatus.getBattery()));
             rcmodule.postStatus(s);
 
@@ -168,7 +167,7 @@ public class StatusManager {
 
         }
 
-         //update last gaps information
+        //update last gaps information
         //sendGapsMessage(gaps);
 
 
@@ -258,7 +257,7 @@ public class StatusManager {
     }
 
     public void sendIrStatusMessage(Collection<IRSensorStatus> irSensorStatus) {
-        Status s  = new Status("IRSTATUS");
+        Status s  = new Status("IRS");
         for (IRSensorStatus status : irSensorStatus){
             s.putContents(irIndexToString(status.getId()),String.valueOf(status.getDistance()));
         }
@@ -292,7 +291,7 @@ public class StatusManager {
     }
 
     public void sendLedStatus(LedStatus led){
-        Status s = new Status("LEDSTATUS");
+        Status s = new Status("LED");
         s.putContents("id",ledIndexToString(led.getId().ordinal()+1));
         int [] color = led.getColor();
         s.putContents("R",color[0]+"");
@@ -364,5 +363,6 @@ public class StatusManager {
 
         }
     }
+
 
 }
