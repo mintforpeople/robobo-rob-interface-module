@@ -34,27 +34,115 @@ import com.mytechia.robobo.framework.IModule;
 public interface IRobMovementModule extends IModule {
 
 
+    /**
+     * Moves the robot forward for time
+     * @param velocity speed of the wheels
+     * @param time time of the movement in milliseconds
+     * @throws InternalErrorException
+     */
     public void moveForwardsTime(int velocity, long time) throws InternalErrorException;
+
+    /**
+     * Moves forward for a number of degrees
+     * @param velocity speed of the wheels
+     * @param angle Angle in degrees
+     * @throws InternalErrorException
+     */
     public void moveForwardsAngle(int velocity, int angle) throws InternalErrorException;
 
+    /**
+     * Moves the robot backward for time
+     * @param velocity speed of the wheels
+     * @param time time of the movement in milliseconds
+     * @throws InternalErrorException
+     */
     public void moveBackwardsTime(int velocity, long time) throws InternalErrorException;
+
+    /**
+     * Moves forward for a number of degrees
+     * @param velocity speed of the wheels
+     * @param angle Angle in degrees
+     * @throws InternalErrorException
+     */
     public void moveBackwardsAngle(int velocity, int angle) throws InternalErrorException;
 
+    /**
+     * Stops the current movement
+     * @throws InternalErrorException
+     */
     public void stop() throws InternalErrorException;
 
+    /**
+     * Turns the robot left for a fixed time
+     * @param velocity speed of the left wheel
+     * @param time time
+     * @throws InternalErrorException
+     */
     public void turnLeftTime(int velocity, long time) throws InternalErrorException;
+
+    /**
+     * Turns the robot left for a fixed angle
+     * @param velocity speed of the left wheel
+     * @param angle angle in degrees
+     * @throws InternalErrorException
+     */
     public void turnLeftAngle(int velocity, int angle) throws InternalErrorException;
 
+    /**
+     * Moves forward for a fixed time
+     * @param velocity speed of the right wheel
+     * @param time time in milliseconds
+     * @throws InternalErrorException
+     */
     public void turnRightTime(int velocity, long time) throws InternalErrorException;
+
+    /**
+     * Turns the robot right for a fixed angle
+     * @param velocity speed of the left wheel
+     * @param angle angle in degrees
+     * @throws InternalErrorException
+     */
     public void turnRightAngle(int velocity, int angle) throws InternalErrorException;
 
+    /**
+     * Turns the robot left for a fixed time backward
+     * @param velocity speed of the left wheel
+     * @param time time
+     * @throws InternalErrorException
+     */
     public void turnLeftBackwardsTime(int velocity, long time) throws InternalErrorException;
+
+    /**
+     * Turns the robot right for a fixed time backward
+     * @param velocity speed of the right wheel
+     * @param time time
+     * @throws InternalErrorException
+     */
     public void turnRightBackwardsTime(int velocity, long time) throws InternalErrorException;
 
-
+    /**
+     * Move the pan to an angle
+     * @param velocity speed of the pan
+     * @param angle objective angle
+     * @throws InternalErrorException
+     */
     public void movePan(int velocity, int angle) throws InternalErrorException;
 
+    /**
+     * Move the tilt to an angle
+     * @param velocity speed of the tilt
+     * @param angle objective angle
+     * @throws InternalErrorException
+     */
     public void moveTilt(int velocity, int angle) throws InternalErrorException;
 
+    /**
+     * Moves pan and tilt at the same time
+     * @param velocitypan velocity speed of the pan
+     * @param anglepan objective angle of the pan
+     * @param velocitytilt velocity speed of the tilt
+     * @param angletilt objective angle of the tilt
+     * @throws InternalErrorException
+     */
     public void movePanTilt(int velocitypan, int anglepan ,int velocitytilt, int angletilt) throws InternalErrorException;
 }

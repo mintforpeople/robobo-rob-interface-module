@@ -33,7 +33,10 @@ import com.mytechia.robobo.framework.IModule;
  */
 public interface IRobInterfaceModule extends IModule {
 
-
+    /**
+     * Method to get an instance of the rob interface
+     * @return rob interface object
+     */
     public IRob getRobInterface();
 
 

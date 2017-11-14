@@ -35,6 +35,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Manager to control the status production and sending
+ */
 public class StatusManager {
 
     private String TAG = "RemoteRob:StatusManager";
@@ -63,7 +66,10 @@ public class StatusManager {
     private IRemoteControlModule rcmodule;
 
 
-
+    /**
+     * Public constructor
+     * @param rcmodule Remote control module to send status
+     */
     public StatusManager(IRemoteControlModule rcmodule) {
         this.rcmodule = rcmodule;
     }
@@ -73,7 +79,11 @@ public class StatusManager {
         return (lastTime + period) < System.currentTimeMillis();
     }
 
-
+    /**
+     * Sends motor status periodically
+     * @param left Left motor status
+     * @param right Right motor status
+     */
     public void sendWheelsStatus(MotorStatus left, MotorStatus right) {
 
         if (timeout(this.lastWheelStatusTime, WHEEL_STATUS_PERIOD)) {
@@ -93,6 +103,11 @@ public class StatusManager {
         }
 
     }
+
+    /**
+     * Sends Pan status periodically
+     * @param status Pan status
+     */
     public void sendPanStatus(MotorStatus status) {
 
         if (timeout(this.lastPanStatusTime, PT_STATUS_PERIOD)) {
@@ -109,7 +124,10 @@ public class StatusManager {
 
     }
 
-
+    /**
+     * Sends Tilt status periodically
+     * @param status Tilt status
+     */
     public void sendTiltStatus(MotorStatus status) {
 
         if (timeout(this.lastTiltStatusTime, PT_STATUS_PERIOD)) {
@@ -126,7 +144,10 @@ public class StatusManager {
 
     }
 
-
+    /**
+     * Sends Battery status periodically
+     * @param batteryStatus battery status
+     */
     public void sendBatteryStatus(BatteryStatus batteryStatus) {
 
         if (timeout(this.lastBatteryStatusTime, BATTERY_STATUS_PERIOD)) {
@@ -141,7 +162,10 @@ public class StatusManager {
 
     }
 
-
+    /**
+     * Sends gap status periodically
+     * @param gaps gap status
+     */
     public void sendGapsStatus(Collection<GapStatus> gaps) {
 
         if (this.lastGaps == null) { //first time ever
@@ -173,6 +197,11 @@ public class StatusManager {
 
     }
 
+    /**
+     * Returns true if the gaps changed
+     * @param newGaps Current gap status
+     * @return true if gaps changed
+     */
     public boolean gapsChanged(Collection<GapStatus> newGaps) {
 
         Iterator<GapStatus> newIterator = newGaps.iterator();
@@ -196,6 +225,10 @@ public class StatusManager {
 
     }
 
+    /**
+     * Sends the gaps status immediately
+     * @param gaps Gap status array
+     */
     public void sendGapsMessage(Collection<GapStatus> gaps) {
         Status s  = new Status("GAPSTATUS");
         for (GapStatus status:gaps){
@@ -205,7 +238,10 @@ public class StatusManager {
     }
 
 
-    /** Checks whether IR values has changed significally since last update
+    /**
+     * Checks whether IR values has changed significally since last update
+     * @param irSensorStatus Collection of ir sensor status
+     * @return true if it changed
      */
     private boolean checkIRsChanged(Collection<IRSensorStatus> irSensorStatus) {
 
@@ -247,7 +283,10 @@ public class StatusManager {
     }
 
 
-
+    /**
+     * Sends ir sensor status if it has changed
+     * @param irSensorStatus collection of ir status
+     */
     public void sendIrStatus(Collection<IRSensorStatus> irSensorStatus) {
 
         if (checkIRsChanged(irSensorStatus)) {
@@ -256,6 +295,10 @@ public class StatusManager {
 
     }
 
+    /**
+     * Sends ir sensor status
+     * @param irSensorStatus collection of ir status
+     */
     public void sendIrStatusMessage(Collection<IRSensorStatus> irSensorStatus) {
         Status s  = new Status("IRS");
         for (IRSensorStatus status : irSensorStatus){
@@ -290,6 +333,10 @@ public class StatusManager {
 
     }
 
+    /**
+     * Sends current led status
+     * @param led Led status
+     */
     public void sendLedStatus(LedStatus led){
         Status s = new Status("LED");
         s.putContents("id",ledIndexToString(led.getId().ordinal()+1));
