@@ -67,6 +67,9 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
     private Context context;
     private int lastPanPosition = 0;
     private int lastTiltPosition = 0;
+    private int wheelStatusR = 0;
+    private int wheelStatusL = 0;
+    private DegreesWaitThread degreeThread;
     private PanWaitThread panThread;
     private TiltWaitThread tiltThread;
     private StatusManager statusManager;
@@ -107,6 +110,8 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             @Override
             public void statusMotorsMT(MotorStatus left, MotorStatus right) {
                 statusManager.sendWheelsStatus(left, right);
+                wheelStatusR = right.getVariationAngle();
+                wheelStatusL = left.getVariationAngle();
 
             }
 
@@ -171,6 +176,8 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                 String wheel = par.get("wheel");
                 int degrees = Math.abs(Integer.parseInt(par.get("degrees")));
                 int speed = Integer.parseInt(par.get("speed"));
+                int blockid = Integer.parseInt(par.get("blockid"));
+
                 RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVEBY-DEGREES Degrees: " + degrees + " Speed: " + speed);
 
 
@@ -183,6 +190,14 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                         Log.e(TAG, "Error movement", e);
                         roboboManager.notifyModuleError(e);
 
+                        if (degreeThread != null) {
+                            if (!degreeThread.isInterrupted()) {
+                                degreeThread.interrupt();
+                            }
+                        }
+                        degreeThread = new DegreesWaitThread(blockid, degrees, wheelStatusR,"right");
+                        panThread.run();
+
                     }
 
                 } else if (wheel.equals("left")) {
@@ -193,6 +208,14 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                         Log.e(TAG, "Error movement", e);
                         roboboManager.notifyModuleError(e);
                     }
+                    if (degreeThread != null) {
+                        if (!degreeThread.isInterrupted()) {
+                            degreeThread.interrupt();
+                        }
+                    }
+                    degreeThread = new DegreesWaitThread(blockid, degrees, wheelStatusL, "left");
+                    panThread.run();
+
 
 
                 } else if (wheel.equals("both")) {
@@ -203,9 +226,18 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                         Log.e(TAG, "Error movement", e);
                         roboboManager.notifyModuleError(e);
                     }
+                    if (degreeThread != null) {
+                        if (!degreeThread.isInterrupted()) {
+                            degreeThread.interrupt();
+                        }
+                    }
+                    degreeThread = new DegreesWaitThread(blockid, degrees, (wheelStatusR+wheelStatusL)/2,"both");
+                    panThread.run();
+
 
 
                 }
+
             }
         });
 
@@ -260,7 +292,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                 RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "TURNINPLACE Degrees: " + degrees);
 
                 try {
-                    irob.moveMT(50, degrees, 50, degrees);
+                    irob.moveMT(50, degrees, -50, degrees);
 
                 } catch (CommunicationException e) {
                     Log.e(TAG, "Error movement", e);
@@ -802,4 +834,107 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             return terminate;
         }
     }
+
+    private class DegreesWaitThread extends Thread {
+        private boolean terminate = false;
+
+        private int oripos = 0;
+        private int newpos = 0;
+        private int blockid = 0;
+        private String wheel = "both";
+
+        public DegreesWaitThread(int blockid, int newpos, int originalpos, String wheel) {
+            this.blockid = blockid;
+            this.oripos = originalpos;
+            this.newpos = newpos;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            int lastTrackedPos = -1;
+            boolean isblocked = false;
+            int blockedCount = 0;
+
+            if (newpos > oripos) {
+                while (!terminate) {
+                    if (lastTrackedPos != getWheelStatus()) {
+                        blockedCount = 0;
+
+                    } else {
+                        blockedCount += 1;
+                        if (blockedCount >= 30) {
+                            isblocked = true;
+                            this.interrupt();
+                        }
+                    }
+                    lastTrackedPos = getWheelStatus();
+                    if (getWheelStatus() > (newpos - 5)) {
+
+
+                        if (!this.isInterrupted()) {
+                            this.interrupt();
+                        }
+                    }
+                    try {
+                        this.sleep(75);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                while (!terminate) {
+                    if (lastTrackedPos != getWheelStatus()) {
+                        blockedCount = 0;
+                    } else {
+                        blockedCount += 1;
+                        if (blockedCount >= 30) {
+                            isblocked = true;
+                            this.interrupt();
+                        }
+                    }
+                    lastTrackedPos = getWheelStatus();
+                    if (getWheelStatus() < (newpos + 5)) {
+                        if (!this.isInterrupted()) {
+                            this.interrupt();
+                        }
+                    }
+                    try {
+                        this.sleep(75);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+        }
+
+        @Override
+        public void interrupt() {
+            terminate = true;
+            Status s = new Status("UNLOCK-TILT");
+            s.putContents("blockid", this.blockid + "");
+            rcmodule.postStatus(s);
+            super.interrupt();
+
+        }
+
+        @Override
+        public boolean isInterrupted() {
+            return terminate;
+        }
+
+        private int getWheelStatus(){
+            switch (wheel){
+                case "right":
+                    return wheelStatusR;
+                case "left":
+                    return wheelStatusL;
+                default:
+                    return (wheelStatusL + wheelStatusR)/2;
+            }
+        }
+    }
+
 }
