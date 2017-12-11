@@ -112,7 +112,6 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                 statusManager.sendWheelsStatus(left, right);
                 wheelStatusR = right.getVariationAngle();
                 wheelStatusL = left.getVariationAngle();
-                roboboManager.log("DEGREESR",wheelStatusR+"");
 
             }
 
@@ -855,7 +854,6 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
         @Override
         public void run() {
-            Log.d("DEGREES-TH","Started degrees thread");
 
             super.run();
             int lastTrackedPos = -1;
@@ -864,7 +862,6 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
             if (newpos > oripos) {
                 while (!terminate) {
-                    Log.d("DEGREES-TH","NewPos: "+newpos+" lastPos: "+lastTrackedPos);
 
                     if (lastTrackedPos != getWheelStatus()) {
                         blockedCount = 0;
@@ -892,7 +889,6 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                 }
             } else {
                 while (!terminate) {
-                    Log.d("DEGREES-TH","NewPos: "+newpos+" lastPos: "+lastTrackedPos);
                     if (lastTrackedPos != getWheelStatus()) {
                         blockedCount = 0;
                     } else {
