@@ -112,6 +112,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                 statusManager.sendWheelsStatus(left, right);
                 wheelStatusR = right.getVariationAngle();
                 wheelStatusL = left.getVariationAngle();
+                roboboManager.log("DEGREESR",wheelStatusR+"");
 
             }
 
@@ -174,9 +175,10 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             public void executeCommand(Command c, IRemoteControlModule rcmodule) {
                 HashMap<String, String> par = c.getParameters();
                 String wheel = par.get("wheel");
-                int degrees = Math.abs(Integer.parseInt(par.get("degrees")));
+                int degrees =Integer.parseInt(par.get("degrees"));
                 int speed = Integer.parseInt(par.get("speed"));
                 int blockid = Integer.parseInt(par.get("blockid"));
+                Log.d("DEGREES", "Wheel: "+wheel+" Degrees: "+degrees+" Speed: "+speed+" BlockId: "+blockid);
 
                 RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVEBY-DEGREES Degrees: " + degrees + " Speed: " + speed);
 
@@ -190,19 +192,19 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                         Log.e(TAG, "Error movement", e);
                         roboboManager.notifyModuleError(e);
 
-                        if (degreeThread != null) {
-                            if (!degreeThread.isInterrupted()) {
-                                degreeThread.interrupt();
-                            }
-                        }
-                        degreeThread = new DegreesWaitThread(blockid, degrees, wheelStatusR,"right");
-                        panThread.run();
-
                     }
+                    if (degreeThread != null) {
+                        if (!degreeThread.isInterrupted()) {
+                            degreeThread.interrupt();
+                        }
+                    }
+                    degreeThread = new DegreesWaitThread(blockid, (int)(degrees*Math.signum(speed)), wheelStatusR,"right");
+                    degreeThread.run();
 
                 } else if (wheel.equals("left")) {
                     //FF
                     try {
+
                         irob.moveMT(0, 0, speed, degrees);
                     } catch (CommunicationException e) {
                         Log.e(TAG, "Error movement", e);
@@ -213,14 +215,15 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                             degreeThread.interrupt();
                         }
                     }
-                    degreeThread = new DegreesWaitThread(blockid, degrees, wheelStatusL, "left");
-                    panThread.run();
+                    degreeThread = new DegreesWaitThread(blockid, (int)(degrees*Math.signum(speed)), wheelStatusL, "left");
+                    degreeThread.run();
 
 
 
                 } else if (wheel.equals("both")) {
 
                     try {
+
                         irob.moveMT(speed, degrees, speed, degrees);
                     } catch (CommunicationException e) {
                         Log.e(TAG, "Error movement", e);
@@ -231,8 +234,8 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                             degreeThread.interrupt();
                         }
                     }
-                    degreeThread = new DegreesWaitThread(blockid, degrees, (wheelStatusR+wheelStatusL)/2,"both");
-                    panThread.run();
+                    degreeThread = new DegreesWaitThread(blockid, (int)(degrees*Math.signum(speed)), (wheelStatusR+wheelStatusL)/2,"both");
+                    degreeThread.run();
 
 
 
@@ -725,7 +728,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
         @Override
         public void interrupt() {
             terminate = true;
-            Status s = new Status("UNCLOK-PAN");
+            Status s = new Status("UNLOCK-PAN");
             s.putContents("blockid", this.blockid + "");
             rcmodule.postStatus(s);
 
@@ -846,11 +849,14 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
         public DegreesWaitThread(int blockid, int newpos, int originalpos, String wheel) {
             this.blockid = blockid;
             this.oripos = originalpos;
-            this.newpos = newpos;
+            this.newpos = originalpos+newpos;
+            this.wheel = wheel;
         }
 
         @Override
         public void run() {
+            Log.d("DEGREES-TH","Started degrees thread");
+
             super.run();
             int lastTrackedPos = -1;
             boolean isblocked = false;
@@ -858,6 +864,8 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
             if (newpos > oripos) {
                 while (!terminate) {
+                    Log.d("DEGREES-TH","NewPos: "+newpos+" lastPos: "+lastTrackedPos);
+
                     if (lastTrackedPos != getWheelStatus()) {
                         blockedCount = 0;
 
@@ -869,7 +877,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                         }
                     }
                     lastTrackedPos = getWheelStatus();
-                    if (getWheelStatus() > (newpos - 5)) {
+                    if (getWheelStatus() > (newpos - 1)) {
 
 
                         if (!this.isInterrupted()) {
@@ -884,6 +892,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                 }
             } else {
                 while (!terminate) {
+                    Log.d("DEGREES-TH","NewPos: "+newpos+" lastPos: "+lastTrackedPos);
                     if (lastTrackedPos != getWheelStatus()) {
                         blockedCount = 0;
                     } else {
@@ -894,7 +903,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                         }
                     }
                     lastTrackedPos = getWheelStatus();
-                    if (getWheelStatus() < (newpos + 5)) {
+                    if (getWheelStatus() < (newpos + 1)) {
                         if (!this.isInterrupted()) {
                             this.interrupt();
                         }
@@ -913,7 +922,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
         @Override
         public void interrupt() {
             terminate = true;
-            Status s = new Status("UNLOCK-TILT");
+            Status s = new Status("UNLOCK-MOVE");
             s.putContents("blockid", this.blockid + "");
             rcmodule.postStatus(s);
             super.interrupt();
