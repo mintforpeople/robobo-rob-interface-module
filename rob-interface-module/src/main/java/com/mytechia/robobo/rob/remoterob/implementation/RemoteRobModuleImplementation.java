@@ -30,6 +30,8 @@ import com.mytechia.commons.framework.exception.InternalErrorException;
 import com.mytechia.commons.framework.simplemessageprotocol.exception.CommunicationException;
 import com.mytechia.robobo.framework.LogLvl;
 import com.mytechia.robobo.framework.RoboboManager;
+import com.mytechia.robobo.framework.frequency.FrequencyMode;
+import com.mytechia.robobo.framework.frequency.IFrequencyModeListener;
 import com.mytechia.robobo.rob.remoterob.IRemoteRobModule;
 import com.mytechia.robobo.framework.remote_control.remotemodule.Command;
 import com.mytechia.robobo.framework.remote_control.remotemodule.ICommandExecutor;
@@ -58,7 +60,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class RemoteRobModuleImplementation implements IRemoteRobModule {
+public class RemoteRobModuleImplementation implements IRemoteRobModule,IFrequencyModeListener {
 
     private IRemoteControlModule rcmodule;
     private IRob irob;
@@ -75,6 +77,8 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
     private StatusManager statusManager;
     private RoboboManager roboboManager;
 
+
+
     @Override
     public void startup(final RoboboManager roboboManager) throws InternalErrorException {
 
@@ -88,7 +92,9 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
         this.roboboManager = roboboManager;
 
-        this.statusManager = new StatusManager(rcmodule);
+        this.statusManager = new StatusManager(rcmodule,irob);
+
+        this.roboboManager.subscribeToFrequencyModeChanges(this);
 
         irob.setOperationMode((byte) 1);
 
@@ -169,6 +175,8 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
         });
 
 
+
+
         rcmodule.registerCommand("MOVEBY-DEGREES", new ICommandExecutor() {
             @Override
             public void executeCommand(Command c, IRemoteControlModule rcmodule) {
@@ -177,7 +185,6 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
                 int degrees =Integer.parseInt(par.get("degrees"));
                 int speed = Integer.parseInt(par.get("speed"));
                 int blockid = Integer.parseInt(par.get("blockid"));
-                Log.d("DEGREES", "Wheel: "+wheel+" Degrees: "+degrees+" Speed: "+speed+" BlockId: "+blockid);
 
                 RemoteRobModuleImplementation.this.roboboManager.log(LogLvl.TRACE, TAG, "MOVEBY-DEGREES Degrees: " + degrees + " Speed: " + speed);
 
@@ -638,6 +645,18 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
         return ((float) level / (float) scale) * 100.0f;
     }
+
+    @Override
+    public void onFrequencyModeChanged(FrequencyMode frequency) {
+        try {
+            this.statusManager.setStatusFrequency(frequency);
+        } catch (CommunicationException e) {
+            Log.e(TAG, "Error setting status period", e);
+            roboboManager.notifyModuleError(e);
+        }
+    }
+
+
 
 
     private class PanWaitThread extends Thread {
