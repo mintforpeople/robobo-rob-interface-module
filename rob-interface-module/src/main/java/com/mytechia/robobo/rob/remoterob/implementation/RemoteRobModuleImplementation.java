@@ -58,6 +58,9 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Implementation of the remote control commands fot the robobo base
+ */
 public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
     private IRemoteControlModule rcmodule;
@@ -80,6 +83,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
         context = roboboManager.getApplicationContext();
 
+        // Load modules
         rcmodule = roboboManager.getModuleInstance(IRemoteControlModule.class);
 
         movementModule = roboboManager.getModuleInstance(IRobMovementModule.class);
@@ -90,6 +94,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
         this.statusManager = new StatusManager(rcmodule);
 
+        // Disable secure mode
         irob.setOperationMode((byte) 1);
 
         irob.setRobStatusPeriod(100);
@@ -105,6 +110,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             }
         });
 
+        // Set status listener to send the status via rcmodule
         irob.addRobStatusListener(new IRobStatusListener() {
 
             @Override
@@ -168,6 +174,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             }
         });
 
+        // Register all the commands in the remote module
 
         rcmodule.registerCommand("MOVEBY-DEGREES", new ICommandExecutor() {
             @Override
@@ -561,7 +568,11 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
         });
     }
 
-
+    /**
+     * Converts a serialized led name to the numerical index used by the iRob
+     * @param led String wih the led name
+     * @return Index of the led
+     */
     private String ledToIndex(String led) {
         switch (led) {
             case "Front-LL":
@@ -585,7 +596,11 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
 
         }
     }
-
+    /**
+     * Converts a numerical index used by the iRob to a serialized led name
+     * @param index Index of the led
+     * @return String wih the led name
+     */
     private String indexToLed(int index) {
         switch (index) {
             case 1:
@@ -623,6 +638,10 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
         return "v0.3.0";
     }
 
+    /**
+     * Gets the current smartphone battery level
+     * @return Battery level
+     */
     public float getBatteryLevel() {
 
         Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -638,6 +657,9 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
     }
 
 
+    /**
+     * Thread that manages pan movements and sends the "movement finished" events
+     */
     private class PanWaitThread extends Thread {
         private boolean terminate = false;
 
@@ -725,6 +747,7 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
         @Override
         public void interrupt() {
             terminate = true;
+            //FIXME Deberiamos revisar esto, no se si esta como UNCLOK en el remote tambien
             Status s = new Status("UNCLOK-PAN");
             s.putContents("blockid", this.blockid + "");
             rcmodule.postStatus(s);
@@ -738,7 +761,9 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             return terminate;
         }
     }
-
+    /**
+     * Thread that manages tilt movements and sends the "movement finished" events
+     */
     private class TiltWaitThread extends Thread {
         private boolean terminate = false;
 
@@ -834,7 +859,9 @@ public class RemoteRobModuleImplementation implements IRemoteRobModule {
             return terminate;
         }
     }
-
+    /**
+     * Thread that manages wheel movements by degrees and sends the "movement finished" events
+     */
     private class DegreesWaitThread extends Thread {
         private boolean terminate = false;
 

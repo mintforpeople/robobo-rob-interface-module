@@ -27,6 +27,7 @@ import android.bluetooth.BluetoothDevice;
 
 /**
  * @author Julio Gómez
+ * Interface of the listeners for receiving bluetooth discovery events
  */
 public interface DiscoverOtherBluetoothDeviceCallback {
 

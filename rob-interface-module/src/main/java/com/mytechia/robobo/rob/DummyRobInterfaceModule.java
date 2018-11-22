@@ -35,6 +35,7 @@ import com.mytechia.robobo.framework.RoboboManager;
 
 
 /**
+ * Dummy rob interface module, used for development without the rob base.
  * This class only prints logs of actions. It is not communicating with the Robobo-ROB
  *
  * @author Julio

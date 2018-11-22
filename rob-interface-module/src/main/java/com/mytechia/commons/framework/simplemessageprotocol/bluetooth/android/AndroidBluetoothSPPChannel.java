@@ -40,6 +40,7 @@ import java.io.OutputStream;
 
 /**
  * @author Julio Gómez
+ * Implementation of the communication channel using Bluetooth
  */
 public class AndroidBluetoothSPPChannel implements IBasicCommunicationChannel{
 
