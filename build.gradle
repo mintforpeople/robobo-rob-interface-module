@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
         jcenter()
         maven {
-            url "http://bizancio:7080/nexus/content/repositories/snapshots/"
+            url "http://192.168.0.5:7080/nexus/content/repositories/snapshots/"
         }
     }
 
@@ -25,7 +25,7 @@ allprojects {
         mavenCentral()
         jcenter()
         maven {
-            url "http://bizancio:7080/nexus/content/repositories/snapshots/"
+            url "http://192.168.0.5:7080/nexus/content/repositories/snapshots/"
         }
     }
 }

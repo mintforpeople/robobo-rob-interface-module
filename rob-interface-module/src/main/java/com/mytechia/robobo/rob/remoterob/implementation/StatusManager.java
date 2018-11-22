@@ -21,12 +21,18 @@
 package com.mytechia.robobo.rob.remoterob.implementation;
 
 
+import android.util.Log;
+
+import com.mytechia.commons.framework.simplemessageprotocol.exception.CommunicationException;
+import com.mytechia.robobo.framework.frequency.FrequencyMode;
+import com.mytechia.robobo.framework.frequency.IFrequencyModeListener;
 import com.mytechia.robobo.framework.remote_control.remotemodule.IRemoteControlModule;
 import com.mytechia.robobo.framework.remote_control.remotemodule.Status;
 
 import com.mytechia.robobo.rob.BatteryStatus;
 import com.mytechia.robobo.rob.GapStatus;
 import com.mytechia.robobo.rob.IRSensorStatus;
+import com.mytechia.robobo.rob.IRob;
 import com.mytechia.robobo.rob.LedStatus;
 import com.mytechia.robobo.rob.MotorStatus;
 
@@ -38,13 +44,29 @@ import java.util.NoSuchElementException;
 /**
  * Manager to control the status production and sending
  */
-public class StatusManager {
+public class StatusManager{
 
     private String TAG = "RemoteRob:StatusManager";
 
-    private static final long PT_STATUS_PERIOD = 500;
-    private static final long WHEEL_STATUS_PERIOD = 500;
-    private static final long BATTERY_STATUS_PERIOD = 30000;
+    private  int PT_STATUS_PERIOD = 500;
+    private  int WHEEL_STATUS_PERIOD = 500;
+    private  int BATTERY_STATUS_PERIOD = 30000;
+
+    private static final int PT_STATUS_PERIOD_LOW = 1000;
+    private static final int WHEEL_STATUS_PERIOD_LOW = 1000;
+    private static final int BATTERY_STATUS_PERIOD_LOW = 30000;
+
+    private static final int PT_STATUS_PERIOD_NORMAL = 333;
+    private static final int WHEEL_STATUS_PERIOD_NORMAL = 333;
+    private static final int BATTERY_STATUS_PERIOD_NORMAL = 20000;
+
+    private static final int PT_STATUS_PERIOD_FAST = 100;
+    private static final int WHEEL_STATUS_PERIOD_FAST = 100;
+    private static final int BATTERY_STATUS_PERIOD_FAST = 10000;
+
+    private static final int PT_STATUS_PERIOD_MAX = 10;
+    private static final int WHEEL_STATUS_PERIOD_MAX = 10;
+    private static final int BATTERY_STATUS_PERIOD_MAX = 1000;
 
     private static final int MIN_IR_CHANGE_TO_STATUS = 15;
 
@@ -64,14 +86,17 @@ public class StatusManager {
 
 
     private IRemoteControlModule rcmodule;
+    private IRob irob;
+
 
 
     /**
      * Public constructor
      * @param rcmodule Remote control module to send status
      */
-    public StatusManager(IRemoteControlModule rcmodule) {
+    public StatusManager(IRemoteControlModule rcmodule, IRob irob) {
         this.rcmodule = rcmodule;
+        this.irob = irob;
     }
 
 
@@ -412,4 +437,35 @@ public class StatusManager {
     }
 
 
+    public void setStatusFrequency(FrequencyMode frequency) throws CommunicationException {
+        switch (frequency){
+            case LOW:
+                irob.setRobStatusPeriod(PT_STATUS_PERIOD_LOW);
+                PT_STATUS_PERIOD = PT_STATUS_PERIOD_LOW;
+                WHEEL_STATUS_PERIOD = WHEEL_STATUS_PERIOD_LOW;
+                BATTERY_STATUS_PERIOD = BATTERY_STATUS_PERIOD_LOW;
+                break;
+            case NORMAL:
+                irob.setRobStatusPeriod(PT_STATUS_PERIOD_NORMAL);
+
+                PT_STATUS_PERIOD = PT_STATUS_PERIOD_NORMAL;
+                WHEEL_STATUS_PERIOD = WHEEL_STATUS_PERIOD_NORMAL;
+                BATTERY_STATUS_PERIOD = BATTERY_STATUS_PERIOD_NORMAL;
+                break;
+            case FAST:
+                irob.setRobStatusPeriod(PT_STATUS_PERIOD_FAST);
+
+                PT_STATUS_PERIOD = PT_STATUS_PERIOD_FAST;
+                WHEEL_STATUS_PERIOD = WHEEL_STATUS_PERIOD_FAST;
+                BATTERY_STATUS_PERIOD = BATTERY_STATUS_PERIOD_FAST;
+                break;
+            case MAX:
+                irob.setRobStatusPeriod(PT_STATUS_PERIOD_MAX);
+
+                PT_STATUS_PERIOD = PT_STATUS_PERIOD_MAX;
+                WHEEL_STATUS_PERIOD = WHEEL_STATUS_PERIOD_MAX;
+                BATTERY_STATUS_PERIOD = BATTERY_STATUS_PERIOD_MAX;
+                break;
+        }
+    }
 }
